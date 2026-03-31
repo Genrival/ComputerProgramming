@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++ CodeLab — Loops</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+:root {
+  --bg:#0b0d12;--surface:#11141c;--surface2:#181c27;--surface3:#1e2230;
+  --border:#222636;--border2:#2c3147;
+  --amber:#f0a500;--amber2:#ffbe3a;
+  --amber-dim:rgba(240,165,0,.11);--amber-glow:rgba(240,165,0,.05);
+  --teal:#2dd4a0;--teal-dim:rgba(45,212,160,.11);
+  --red:#ff5f6e;--red-dim:rgba(255,95,110,.11);
+  --blue:#5aabff;--blue-dim:rgba(90,171,255,.1);
+  --purple:#c084fc;--purple-dim:rgba(192,132,252,.1);
+  --orange:#fb923c;--orange-dim:rgba(251,146,60,.1);
+  --text:#dde1ee;--text2:#8892aa;--text3:#4a5068;
+  --mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;
+  --r:10px;--rs:6px;
+  --bottombar-h:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:48px 40px;width:100%;max-width:460px;text-align:center;}
+.login-logo{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;background:var(--amber);border-radius:14px;font-family:var(--mono);font-size:14px;font-weight:700;color:#0b0d12;margin-bottom:20px;}
+.login-title{font-size:22px;font-weight:800;margin-bottom:6px;}
+.login-sub{font-size:12px;color:var(--text2);font-family:var(--mono);margin-bottom:32px;}
+.login-field{text-align:left;margin-bottom:16px;}
+.login-field label{display:block;font-size:10px;font-family:var(--mono);color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.login-input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:11px 14px;font-family:var(--mono);font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+.login-input:focus{border-color:var(--amber);}
+.login-input.ok{border-color:var(--teal);color:var(--teal);}
+.login-input.err{border-color:var(--red);color:var(--red);}
+.login-hint{font-size:10px;font-family:var(--mono);margin-top:5px;min-height:14px;}
+.login-hint.ok{color:var(--teal);}.login-hint.err{color:var(--red);}
+.login-welcome{background:var(--teal-dim);border:1px solid var(--teal);border-radius:var(--rs);padding:12px 16px;font-size:12px;font-family:var(--mono);color:var(--teal);margin-bottom:20px;display:none;text-align:left;line-height:1.7;}
+.login-btn{width:100%;padding:13px;background:var(--amber);border:none;border-radius:var(--rs);font-family:var(--mono);font-size:12px;font-weight:700;color:#0b0d12;cursor:pointer;transition:background .15s;letter-spacing:.05em;margin-top:4px;}
+.login-btn:hover{background:var(--amber2);}
+.login-btn:disabled{opacity:.45;cursor:default;}
+.login-notice{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:16px;}
+
+/* ── APP SHELL ── */
+#app-shell{display:none;}
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-ico{width:30px;height:30px;background:var(--amber);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:#0b0d12;}
+.brand-title{font-size:14px;font-weight:700;}
+.brand-sub{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:1px;}
+.hdr-right{display:flex;align-items:center;gap:14px;}
+.prog-wrap{display:flex;align-items:center;gap:10px;}
+.prog-lbl{font-size:11px;color:var(--text2);font-family:var(--mono);}
+.prog-track{width:160px;height:4px;background:var(--border2);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--amber);border-radius:2px;transition:width .5s ease;width:0%;}
+.score-tag{background:var(--amber-dim);border:1px solid var(--amber);border-radius:20px;padding:4px 13px;font-size:11px;font-family:var(--mono);color:var(--amber);font-weight:700;}
+.user-tag{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 13px;font-size:10px;font-family:var(--mono);color:var(--text2);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.gtimer{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 13px;}
+.gtimer-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 5px var(--teal);animation:blink 1.4s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+.gtimer-dot.warn{background:var(--amber);box-shadow:0 0 5px var(--amber);}
+.gtimer-dot.urgent{background:var(--red);box-shadow:0 0 5px var(--red);}
+.gtimer-dot.off{background:var(--text3);animation:none;box-shadow:none;}
+.gtimer-num{font-size:12px;font-family:var(--mono);font-weight:700;color:var(--teal);min-width:44px;transition:color .3s;}
+.gtimer-num.warn{color:var(--amber);}
+.gtimer-num.urgent{color:var(--red);}
+.gtimer-num.off{color:var(--text3);}
+.gtimer-lbl{font-size:10px;color:var(--text3);font-family:var(--mono);}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 58px - var(--bottombar-h));}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:12px 0;overflow-y:auto;max-height:calc(100vh - 58px - var(--bottombar-h));position:sticky;top:58px;}
+.sb-lbl{padding:10px 16px 4px;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);font-family:var(--mono);}
+.nav-it{display:flex;align-items:center;gap:9px;padding:7px 14px;cursor:pointer;transition:all .15s;border-left:2px solid transparent;margin:1px 0;}
+.nav-it:hover{background:var(--amber-glow);}
+.nav-it.active{background:var(--amber-dim);border-left-color:var(--amber);}
+.nav-it.done-ok .nav-n{background:var(--teal)!important;border-color:var(--teal)!important;color:#0b0d12!important;}
+.nav-it.done-fail .nav-n{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important;}
+.nav-n{width:20px;height:20px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);color:var(--text3);flex-shrink:0;transition:all .2s;font-weight:700;}
+.nav-it.active .nav-n{background:var(--amber);border-color:var(--amber);color:#0b0d12;}
+.nav-txt{font-size:11px;color:var(--text2);line-height:1.3;flex:1;}
+.nav-it.active .nav-txt{color:var(--amber2);font-weight:600;}
+.nav-it.done-ok .nav-txt{color:var(--teal);}
+.nav-it.done-fail .nav-txt{color:var(--red);}
+.nav-badge{font-size:9px;font-family:var(--mono);color:var(--text3);background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:2px 5px;white-space:nowrap;}
+
+.main{padding:28px 32px 28px;max-width:860px;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── CARDS & Q STYLES ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:18px;overflow:hidden;}
+.card-bar{background:var(--surface2);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:8px;}
+.dot{width:8px;height:8px;border-radius:50%;}
+.d-r{background:#ff5f6e;}.d-y{background:#ffbe3a;}.d-g{background:#2dd4a0;}
+.c-file{font-size:10px;font-family:var(--mono);color:var(--text3);margin-left:4px;}
+.c-type{margin-left:auto;font-size:9px;font-family:var(--mono);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid;}
+.t-mc{color:var(--blue);border-color:var(--blue);background:var(--blue-dim);}
+.t-fill{color:var(--amber);border-color:var(--amber);background:var(--amber-dim);}
+.t-pred{color:var(--teal);border-color:var(--teal);background:var(--teal-dim);}
+.t-match{color:var(--purple);border-color:var(--purple);background:var(--purple-dim);}
+.t-bug{color:var(--orange);border-color:var(--orange);background:var(--orange-dim);}
+.card-body{padding:20px 22px;}
+.q-lbl{font-size:10px;font-family:var(--mono);color:var(--amber);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.q-diff{font-size:9px;padding:2px 7px;border-radius:3px;font-weight:700;}
+.diff-easy{background:rgba(45,212,160,.12);color:var(--teal);border:1px solid var(--teal);}
+.diff-med{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);}
+.diff-hard{background:rgba(251,146,60,.12);color:var(--orange);border:1px solid var(--orange);}
+.diff-xhard{background:var(--red-dim);color:var(--red);border:1px solid var(--red);}
+.q-text{font-size:14px;font-weight:600;color:var(--text);line-height:1.6;margin-bottom:16px;}
+.q-text code{font-family:var(--mono);font-size:12px;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:1px 5px;color:var(--amber2);}
+.code{background:#080a0f;border:1px solid var(--border2);border-radius:var(--rs);padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.85;margin-bottom:16px;white-space:pre;overflow-x:auto;}
+.kw{color:#c792ea;}.str{color:#c3e88d;}.num{color:#f78c6c;}.cmt{color:#4a5568;font-style:italic;}
+.fn{color:#82aaff;}.var{color:#eefff9;}.punct{color:#89ddff;}.op{color:#89ddff;}
+
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.opts.wide{grid-template-columns:1fr;}
+.opt{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 14px;cursor:pointer;transition:all .15s;text-align:left;color:var(--text);font-family:var(--mono);font-size:12px;display:flex;align-items:flex-start;gap:10px;line-height:1.5;width:100%;min-height:48px;}
+.opt:hover:not(:disabled){border-color:var(--amber);background:var(--amber-dim);color:var(--amber2);}
+.opt:disabled{cursor:default;}
+.opt.chosen-wrong{border-color:var(--red)!important;background:var(--red-dim)!important;color:var(--red)!important;}
+.opt.correct{border-color:var(--teal)!important;background:var(--teal-dim)!important;color:var(--teal)!important;}
+.opt.wrong{border-color:var(--red)!important;background:var(--red-dim)!important;color:var(--red)!important;}
+.opt-k{width:20px;height:20px;background:var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.opt.correct .opt-k{background:var(--teal);color:#0b0d12;}
+.opt.chosen-wrong .opt-k{background:var(--red);color:#fff;}
+
+.fill-inp{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:9px 13px;font-family:var(--mono);font-size:13px;color:var(--text);width:100%;outline:none;transition:border-color .2s;margin-bottom:10px;}
+.fill-inp:focus{border-color:var(--amber);}
+.fill-inp.ok{border-color:var(--teal);color:var(--teal);}
+.fill-inp.fail{border-color:var(--red);color:var(--red);}
+.fill-inp:disabled{opacity:.8;cursor:default;}
+
+.out-line{background:#080a0f;border:1px solid var(--border2);border-radius:var(--rs);padding:10px 14px;font-family:var(--mono);font-size:12.5px;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.out-sym{color:var(--amber);flex-shrink:0;}
+.out-inp{background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12.5px;color:var(--text);flex:1;caret-color:var(--amber);}
+.out-inp:disabled{opacity:.8;}
+.out-inp.ok{color:var(--teal);}
+.out-inp.fail{color:var(--red);}
+
+.bug-lines{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+.bug-line{display:flex;align-items:flex-start;cursor:pointer;border-radius:var(--rs);overflow:hidden;transition:all .15s;}
+.bug-line:hover .bug-code{background:rgba(240,165,0,.06);border-color:var(--amber);}
+.bug-lnum{width:32px;background:var(--surface3);border:1px solid var(--border);border-right:none;padding:8px 0;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3);flex-shrink:0;}
+.bug-code{flex:1;background:#080a0f;border:1px solid var(--border2);border-left:none;padding:8px 14px;font-family:var(--mono);font-size:12px;color:var(--text);line-height:1.6;transition:all .15s;}
+.bug-line.selected .bug-lnum{background:var(--amber-dim);border-color:var(--amber);color:var(--amber);}
+.bug-line.selected .bug-code{background:var(--amber-dim);border-color:var(--amber);}
+.bug-line.chosen-wrong .bug-lnum,.bug-line.chosen-wrong .bug-code{background:var(--red-dim)!important;border-color:var(--red)!important;color:var(--red)!important;}
+.bug-line.correct-pick .bug-lnum,.bug-line.correct-pick .bug-code{background:var(--teal-dim)!important;border-color:var(--teal)!important;color:var(--teal)!important;}
+
+.match-grid{display:flex;flex-direction:column;gap:16px;margin-bottom:12px;}
+.match-col-lbl{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.chip-pool{display:flex;flex-wrap:wrap;gap:7px;}
+.m-chip{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:7px 11px;font-family:var(--mono);font-size:11px;color:var(--text);cursor:grab;transition:all .15s;user-select:none;white-space:nowrap;}
+.m-chip:hover:not(.gone){border-color:var(--amber);color:var(--amber2);}
+.m-chip.gone{opacity:.18;pointer-events:none;}
+.m-chip.ok{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);cursor:default;}
+.m-chip.fail{border-color:var(--red);color:var(--red);background:var(--red-dim);}
+.drop-rows{display:flex;flex-direction:column;gap:7px;}
+.drop-row{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:9px 14px;min-height:44px;}
+.drop-desc{font-size:11px;font-family:var(--mono);color:var(--text2);line-height:1.5;flex:1;min-width:0;}
+.drop-slot{flex-shrink:0;width:180px;min-height:32px;background:var(--bg);border:1px dashed var(--border2);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;transition:all .15s;padding:4px 8px;cursor:pointer;overflow:hidden;}
+.drop-slot:hover,.drop-slot.over{border-color:var(--amber);background:var(--amber-dim);}
+.drop-slot.ok{border-style:solid;border-color:var(--teal);background:var(--teal-dim);}
+.drop-slot.fail{border-style:solid;border-color:var(--red);background:var(--red-dim);}
+.slot-txt{font-family:var(--mono);font-size:11px;color:var(--amber2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:164px;}
+.slot-hint{font-size:10px;color:var(--text3);font-family:var(--mono);}
+
+.fb{border-radius:var(--rs);padding:10px 14px;font-size:12px;font-family:var(--mono);margin-top:10px;display:none;line-height:1.55;}
+.fb.show{display:block;animation:fadeIn .2s ease;}
+.fb.ok{background:var(--teal-dim);border:1px solid var(--teal);color:var(--teal);}
+.fb.fail{background:var(--red-dim);border:1px solid var(--red);color:var(--red);}
+
+.btn-row{display:flex;gap:9px;margin-top:14px;align-items:center;flex-wrap:wrap;}
+.btn{padding:8px 18px;border-radius:var(--rs);font-size:11px;font-family:var(--mono);font-weight:700;letter-spacing:.06em;cursor:pointer;border:1px solid;transition:all .15s;}
+.btn-pri{background:var(--amber);border-color:var(--amber);color:#0b0d12;}
+.btn-pri:hover{background:var(--amber2);}
+.btn-nxt{background:var(--surface2);border-color:var(--border2);color:var(--text2);display:none;}
+.btn-nxt.show{display:inline-flex;align-items:center;gap:5px;animation:fadeIn .3s ease;}
+.btn-nxt:hover{border-color:var(--amber);color:var(--amber);}
+
+/* ── RESULT SCREEN ── */
+.result-wrap{padding:48px 32px;text-align:center;}
+.res-glyph{font-size:52px;margin-bottom:12px;}
+.res-title{font-size:26px;font-weight:800;color:var(--amber2);margin-bottom:6px;}
+.res-sub{font-size:13px;color:var(--text2);font-family:var(--mono);margin-bottom:10px;}
+.res-id-card{display:inline-block;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 20px;font-family:var(--mono);font-size:12px;margin-bottom:6px;line-height:1.8;}
+.res-id-card .val{color:var(--amber2);font-weight:700;}
+.res-ts{display:inline-block;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 22px;font-family:var(--mono);font-size:13px;color:var(--text2);margin-bottom:20px;letter-spacing:.03em;}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:440px;margin:0 auto 24px;}
+.res-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:14px;}
+.res-sv{font-size:22px;font-weight:700;font-family:var(--mono);margin-bottom:3px;}
+.c-ok{color:var(--teal);}.c-fail{color:var(--red);}.c-score{color:var(--amber);}
+.res-sl{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.review-block{text-align:left;max-width:580px;margin:0 auto 24px;max-height:300px;overflow-y:auto;}
+.rev-item{display:flex;align-items:center;gap:9px;padding:7px 12px;border-radius:5px;margin-bottom:4px;font-size:11px;font-family:var(--mono);}
+.rev-item.ok{background:var(--teal-dim);color:var(--teal);}
+.rev-item.fail{background:var(--red-dim);color:var(--red);}
+
+/* Locked answer key */
+.answer-key-section{max-width:580px;margin:0 auto 24px;text-align:left;}
+.answer-key-unlock{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.answer-key-unlock input{background:var(--bg);border:1px solid var(--border2);border-radius:var(--rs);padding:7px 12px;font-family:var(--mono);font-size:12px;color:var(--text);outline:none;flex:1;min-width:160px;}
+.answer-key-unlock input:focus{border-color:var(--amber);}
+.answer-key-unlock button{padding:7px 16px;background:var(--amber);border:none;border-radius:var(--rs);font-family:var(--mono);font-size:11px;font-weight:700;color:#0b0d12;cursor:pointer;}
+.answer-key-body{display:none;margin-top:12px;}
+.answer-key-body.show{display:block;}
+.ak-row{display:flex;align-items:flex-start;gap:8px;padding:5px 8px;border-radius:4px;font-size:11px;font-family:var(--mono);margin-bottom:3px;}
+.ak-row:nth-child(even){background:var(--surface3);}
+.ak-num{color:var(--text3);min-width:28px;flex-shrink:0;}
+.ak-title{color:var(--text2);flex:1;}
+.ak-ans{color:var(--amber2);font-weight:700;}
+.ak-lbl{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:8px 8px 4px;font-family:var(--mono);}
+
+/* ── BOTTOM NAV BAR ── */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;height:var(--bottombar-h);background:var(--surface);border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:300;gap:10px;}
+.bb-nav{display:flex;align-items:center;gap:6px;}
+.bb-btn{width:40px;height:40px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .15s;color:var(--text2);}
+.bb-btn:hover{border-color:var(--amber);color:var(--amber);}
+.bb-btn:disabled{opacity:.3;cursor:default;}
+.bb-qnum{font-family:var(--mono);font-size:11px;color:var(--text2);min-width:52px;text-align:center;white-space:nowrap;}
+.bb-dots{display:flex;align-items:center;gap:3px;flex:1;overflow:hidden;justify-content:center;flex-wrap:nowrap;}
+.bb-dot{width:8px;height:8px;border-radius:50%;background:var(--surface3);border:1px solid var(--border2);flex-shrink:0;transition:all .3s;cursor:pointer;}
+.bb-dot.current{background:var(--amber);border-color:var(--amber);box-shadow:0 0 4px var(--amber);}
+.bb-dot.done-ok{background:var(--teal);border-color:var(--teal);}
+.bb-dot.done-fail{background:var(--red);border-color:var(--red);}
+.bb-finish{padding:0 16px;height:38px;background:var(--amber);border:none;border-radius:var(--rs);font-family:var(--mono);font-size:11px;font-weight:700;color:#0b0d12;cursor:pointer;white-space:nowrap;transition:background .15s;}
+.bb-finish:hover{background:var(--amber2);}
+
+/* ── OVERLAYS ── */
+.timeup-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(11,13,18,.94);align-items:center;justify-content:center;}
+.timeup-overlay.show{display:flex;}
+.timeup-box{background:var(--surface);border:2px solid var(--red);border-radius:16px;padding:48px 52px;text-align:center;max-width:420px;}
+.timeup-icon{font-size:52px;margin-bottom:16px;}
+.timeup-box h2{font-size:22px;font-weight:800;color:var(--red);margin-bottom:8px;}
+.timeup-box p{font-size:12px;font-family:var(--mono);color:var(--text2);margin-bottom:24px;line-height:1.6;}
+
+/* ── WARN OVERLAY ── */
+.warn-overlay{display:none;position:fixed;inset:0;z-index:9998;background:rgba(11,13,18,.96);align-items:center;justify-content:center;}
+.warn-overlay.show{display:flex;}
+.warn-box{background:var(--surface);border:2px solid var(--red);border-radius:16px;padding:40px 44px;text-align:center;max-width:420px;width:90%;}
+.warn-icon{font-size:48px;margin-bottom:12px;}
+.warn-title{font-size:20px;font-weight:800;color:var(--red);margin-bottom:8px;font-family:var(--sans);}
+.warn-msg{font-size:12px;color:var(--text2);font-family:var(--mono);line-height:1.8;margin-bottom:6px;}
+.warn-penalty{font-size:22px;font-weight:800;color:var(--red);font-family:var(--mono);margin:10px 0 6px;}
+.warn-count{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;}
+.warn-countdown{font-size:13px;color:var(--amber);font-family:var(--mono);font-weight:700;margin-bottom:16px;}
+.warn-reload-msg{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:14px;line-height:1.6;}
+.warn-btn{padding:11px 32px;background:var(--red);border:none;border-radius:var(--rs);font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;cursor:pointer;transition:background .15s;}
+.warn-btn:hover{background:#ff3344;}
+
+/* ── PREDICTION MODAL ── */
+.pred-overlay{display:none;position:fixed;inset:0;z-index:9997;background:rgba(11,13,18,.97);align-items:center;justify-content:center;}
+.pred-overlay.show{display:flex;}
+.pred-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:40px 44px;text-align:center;max-width:460px;width:90%;}
+.pred-title{font-size:20px;font-weight:800;color:var(--amber2);margin-bottom:6px;font-family:var(--sans);}
+.pred-sub{font-size:11px;color:var(--text2);font-family:var(--mono);margin-bottom:28px;line-height:1.7;}
+.pred-opts{display:flex;flex-direction:column;gap:10px;}
+.pred-opt{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:13px 18px;cursor:pointer;transition:all .18s;text-align:left;display:flex;align-items:center;gap:14px;font-family:var(--mono);}
+.pred-opt:hover{border-color:var(--amber);background:var(--amber-dim);}
+.pred-opt-emoji{font-size:22px;flex-shrink:0;}
+.pred-opt-label{font-size:13px;font-weight:700;color:var(--amber2);}
+.pred-opt-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+
+/* ── ARISTOTLE CARD ── */
+.aristotle-card{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);padding:24px 28px;margin:20px auto 20px;max-width:580px;text-align:center;}
+.aristotle-vs{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:18px;}
+.aristotle-vs-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 20px;min-width:110px;}
+.aristotle-vs-label{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+.aristotle-vs-val{font-size:24px;font-weight:800;font-family:var(--mono);}
+.aristotle-vs-sep{font-size:18px;font-weight:800;color:var(--text3);font-family:var(--mono);}
+.aristotle-bust{font-size:36px;margin-bottom:8px;}
+.aristotle-quote{font-size:13px;color:var(--text);line-height:1.85;font-style:italic;margin-bottom:10px;font-family:var(--sans);}
+.aristotle-attr{font-size:11px;color:var(--amber);font-family:var(--mono);letter-spacing:.06em;}
+
+/* ── TRIPLE CONFIRM MODALS ── */
+.confirm-overlay{display:none;position:fixed;inset:0;z-index:9996;background:rgba(11,13,18,.96);align-items:center;justify-content:center;}
+.confirm-overlay.show{display:flex;}
+.confirm-box{background:var(--surface);border-radius:16px;padding:36px 40px;text-align:center;max-width:420px;width:90%;}
+.confirm-box.step1{border:1px solid var(--border2);}
+.confirm-box.step2{border:2px solid var(--amber);}
+.confirm-box.step3{border:2px solid var(--red);}
+.confirm-icon{font-size:40px;margin-bottom:12px;}
+.confirm-title{font-size:18px;font-weight:800;margin-bottom:8px;font-family:var(--sans);}
+.confirm-box.step1 .confirm-title{color:var(--text);}
+.confirm-box.step2 .confirm-title{color:var(--amber2);}
+.confirm-box.step3 .confirm-title{color:var(--red);}
+.confirm-msg{font-size:12px;color:var(--text2);font-family:var(--mono);line-height:1.8;margin-bottom:6px;}
+.confirm-unanswered{font-size:13px;font-weight:700;color:var(--red);font-family:var(--mono);margin:8px 0 16px;}
+.confirm-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px;}
+.confirm-back{padding:10px;background:transparent;border:1px solid var(--border2);border-radius:var(--rs);font-family:var(--mono);font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;}
+.confirm-back:hover{border-color:var(--amber);color:var(--amber);}
+.confirm-proceed{padding:12px;background:var(--amber);border:none;border-radius:var(--rs);font-family:var(--mono);font-size:12px;font-weight:700;color:#0b0d12;cursor:pointer;transition:background .15s;}
+.confirm-proceed:hover{background:var(--amber2);}
+.confirm-box.step3 .confirm-proceed{background:var(--red);color:#fff;}
+.confirm-box.step3 .confirm-proceed:hover{background:#ff3344;}
+
+/* ── LIGATURE FIX ── */
+*{font-variant-ligatures:none;}
+code,.code-block,pre,span,body,p,div,li,td,th,label,button{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;}
+.code,.bug-code,.out-line{user-select:none;-webkit-user-select:none;}
+
+/* ── DEVTOOLS BLOCKED ── */
+#devtools-block{display:none;position:fixed;inset:0;z-index:99999;background:#0b0d12;align-items:center;justify-content:center;text-align:center;flex-direction:column;gap:16px;}
+#devtools-block.show{display:flex;}
+#devtools-block h2{color:var(--red);font-size:24px;font-weight:800;font-family:var(--sans);}
+#devtools-block p{color:var(--text2);font-size:13px;font-family:var(--mono);line-height:1.7;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--surface);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* ══════════════════════════════════════
+   MOBILE RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:700px){
+  /* hide sidebar entirely on mobile */
+  .sidebar{display:none!important;}
+  .layout{grid-template-columns:1fr;}
+  /* strip header down */
+  .hdr{padding:0 14px;height:52px;}
+  .brand,.prog-wrap,.user-tag{display:none!important;}
+  .hdr-right{gap:8px;width:100%;justify-content:flex-end;}
+  .score-tag{font-size:12px;padding:4px 10px;}
+  .gtimer-lbl{display:none;}
+  /* main content */
+  .main{padding:16px 14px 14px;}
+  .card-body{padding:14px 14px;}
+  .q-text{font-size:15px;}
+  /* MC options single column, bigger touch targets */
+  .opts{grid-template-columns:1fr!important;}
+  .opt{min-height:52px;font-size:13px;padding:13px 14px;}
+  /* fill/predict inputs */
+  .fill-inp,.out-inp{font-size:15px;padding:12px 14px;}
+  .out-line{padding:12px 14px;}
+  /* match drop slots full width */
+  .drop-row{flex-direction:column;align-items:flex-start;}
+  .drop-slot{width:100%;min-height:44px;}
+  /* code block */
+  .code{font-size:12px;padding:12px;}
+  /* bug lines */
+  .bug-code{font-size:11px;padding:8px 10px;}
+  /* bottom bar dots: fewer visible */
+  .bb-dots{gap:2px;}
+  .bb-dot{width:6px;height:6px;}
+  /* btn row */
+  .btn-row{gap:8px;}
+  .btn{padding:10px 16px;font-size:12px;}
+  /* result */
+  .result-wrap{padding:24px 16px;}
+  .res-stats{grid-template-columns:repeat(2,1fr);}
+  .answer-key-unlock{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<!-- DevTools block screen -->
+<div id="devtools-block">
+  <div style="font-size:52px">🔒</div>
+  <h2>Developer Tools Detected</h2>
+  <p>This activity cannot be taken with DevTools open.<br>Close DevTools to continue.</p>
+</div>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">C++</div>
+    <div class="login-title">CodeLab Activity</div>
+    <div class="login-sub">Loops · 60 min</div>
+    <div class="login-field">
+      <label>Student ID Number</label>
+      <input type="text" class="login-input" id="login-id" placeholder="e.g. 23-19390" autocomplete="off" spellcheck="false">
+      <div class="login-hint" id="login-hint"></div>
+    </div>
+    <div class="login-welcome" id="login-welcome"></div>
+    <button class="login-btn" id="login-btn" onclick="attemptLogin()" disabled>Verify &amp; Start Activity</button>
+    <p class="login-notice">Enter your ID number exactly as provided.</p>
+  </div>
+</div>
+
+<!-- App Shell -->
+<div id="app-shell">
+  <header class="hdr">
+    <div class="brand">
+      <div class="brand-ico">C++</div>
+      <div>
+        <div class="brand-title">CodeLab Activity</div>
+        <div class="brand-sub">Loops - Batch 1</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="user-tag" id="user-tag"></div>
+      <div class="prog-wrap">
+        <span class="prog-lbl" id="prog-lbl">0 / 50</span>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+      </div>
+      <div class="score-tag" id="score-tag">Score: 0</div>
+      <div class="gtimer">
+        <div class="gtimer-dot" id="gtimer-dot"></div>
+        <div class="gtimer-num" id="gtimer-num">60:00</div>
+        <div class="gtimer-lbl">remaining</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sb-lbl">Questions</div>
+      <div id="nav-root"></div>
+      <div id="nav-result-wrap" style="display:none">
+        <div class="sb-lbl" style="margin-top:8px;">Summary</div>
+        <div class="nav-it" onclick="triggerFinishFlow()">
+          <div class="nav-n" style="background:var(--amber);border-color:var(--amber);color:#0b0d12;font-weight:700;">★</div>
+          <div class="nav-txt">View Results</div>
+        </div>
+      </div>
+    </aside>
+    <main class="main">
+      <div id="screens-root"></div>
+      <div class="screen" id="screen-result">
+        <div class="result-wrap">
+          <div class="res-glyph" id="res-emoji">🎉</div>
+          <div class="res-title">Activity Complete!</div>
+          <div class="res-sub">Loops — for, while, do-while, nested</div>
+          <div class="res-id-card" id="res-id-card"></div>
+          <div class="aristotle-card" id="aristotle-card" style="display:none;">
+            <div class="aristotle-vs">
+              <div class="aristotle-vs-box">
+                <div class="aristotle-vs-label">You predicted</div>
+                <div class="aristotle-vs-val" id="aris-pred-val" style="color:var(--blue)">—</div>
+              </div>
+              <div class="aristotle-vs-sep">vs</div>
+              <div class="aristotle-vs-box">
+                <div class="aristotle-vs-label">You scored</div>
+                <div class="aristotle-vs-val" id="aris-score-val">0</div>
+              </div>
+            </div>
+            <div class="aristotle-bust">🏛️</div>
+            <div class="aristotle-quote" id="aris-quote"></div>
+            <div class="aristotle-attr">— Aristotle</div>
+          </div>
+          <div class="res-ts" id="res-ts"></div>
+          <div class="res-stats">
+            <div class="res-stat"><div class="res-sv c-ok" id="r-ok">0</div><div class="res-sl">Correct</div></div>
+            <div class="res-stat"><div class="res-sv c-fail" id="r-fail">0</div><div class="res-sl">Incorrect</div></div>
+            <div class="res-stat"><div class="res-sv c-score" id="r-pct">0%</div><div class="res-sl">Score</div></div>
+            <div class="res-stat"><div class="res-sv c-fail" id="r-tabswitch">0</div><div class="res-sl">Tab Switches</div></div>
+            <div class="res-stat"><div class="res-sv c-fail" id="r-penalty">−0 pts</div><div class="res-sl">Penalty</div></div>
+          </div>
+          <div class="review-block" id="review-block"></div>
+          <!-- Answer Key -->
+          <div class="answer-key-section" id="answer-key-section">
+            <div class="answer-key-unlock">
+              <span style="font-size:11px;font-family:var(--mono);color:var(--text3);white-space:nowrap;">🔒 Answer Key</span>
+              <input type="password" id="ak-password" placeholder="Enter password to unlock…">
+              <button onclick="unlockAnswerKey()">Unlock</button>
+            </div>
+            <div class="answer-key-body" id="answer-key-body"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <div class="bottom-bar" id="bottom-bar">
+    <div class="bb-nav">
+      <button class="bb-btn" id="bb-prev" onclick="bbPrev()" title="Previous">◀</button>
+      <span class="bb-qnum" id="bb-qnum">Q1 / 50</span>
+      <button class="bb-btn" id="bb-next" onclick="bbNext()" title="Next">▶</button>
+    </div>
+    <div class="bb-dots" id="bb-dots"></div>
+    <button class="bb-finish" onclick="triggerFinishFlow()">✔ Finish</button>
+  </div>
+</div>
+
+<!-- Time Up -->
+<div class="timeup-overlay" id="timeup-overlay">
+  <div class="timeup-box">
+    <div class="timeup-icon">⏰</div>
+    <h2>Time's Up!</h2>
+    <p>Your 60-minute activity time has expired.<br>Unanswered questions are marked incorrect.</p>
+    <button class="btn btn-pri" style="padding:12px 32px;" onclick="forceFinish()">View My Results →</button>
+  </div>
+</div>
+
+<!-- Tab-leave warning -->
+<div class="warn-overlay" id="warn-overlay">
+  <div class="warn-box">
+    <div class="warn-icon">⚠️</div>
+    <div class="warn-title">Tab Switch Detected</div>
+    <div class="warn-msg">You left this activity window.<br>This incident has been recorded.</div>
+    <div class="warn-penalty">−5 penalty points</div>
+    <div class="warn-count" id="warn-count">Tab switch #1</div>
+    <div class="warn-countdown" id="warn-countdown">Auto-closing in 5s</div>
+    <div class="warn-reload-msg">⚠ Reloading or closing the page will lose all progress.</div>
+    <button class="warn-btn" onclick="dismissWarning()">I Understand — Return to Activity</button>
+  </div>
+</div>
+
+<!-- Prediction modal -->
+<div class="pred-overlay" id="pred-overlay">
+  <div class="pred-box">
+    <div class="pred-title">Before you begin…</div>
+    <div class="pred-sub">What score do you honestly expect to get?<br>This is just for you — be truthful.</div>
+    <div class="pred-opts">
+      <div class="pred-opt" onclick="setPrediction('46-50')">
+        <span class="pred-opt-emoji">🎯</span>
+        <div><div class="pred-opt-label">46 – 50</div><div class="pred-opt-sub">"I've got this. I'm fully prepared."</div></div>
+      </div>
+      <div class="pred-opt" onclick="setPrediction('35-45')">
+        <span class="pred-opt-emoji">💪</span>
+        <div><div class="pred-opt-label">35 – 45</div><div class="pred-opt-sub">"Feeling confident, might slip on a few."</div></div>
+      </div>
+      <div class="pred-opt" onclick="setPrediction('25-34')">
+        <span class="pred-opt-emoji">🤔</span>
+        <div><div class="pred-opt-label">25 – 34</div><div class="pred-opt-sub">"I'll try my best."</div></div>
+      </div>
+      <div class="pred-opt" onclick="setPrediction('0-24')">
+        <span class="pred-opt-emoji">😅</span>
+        <div><div class="pred-opt-label">0 – 24</div><div class="pred-opt-sub">"Just going for it."</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Triple Confirm Modals -->
+<div class="confirm-overlay" id="confirm-overlay-1">
+  <div class="confirm-box step1">
+    <div class="confirm-icon">📋</div>
+    <div class="confirm-title">Finish the Activity?</div>
+    <div class="confirm-msg">You're about to submit your answers.</div>
+    <div class="confirm-unanswered" id="confirm-unanswered-1"></div>
+    <div class="confirm-btns">
+      <button class="confirm-proceed" onclick="confirmStep2()">Continue →</button>
+      <button class="confirm-back" onclick="closeConfirm()">← Go Back</button>
+    </div>
+  </div>
+</div>
+<div class="confirm-overlay" id="confirm-overlay-2">
+  <div class="confirm-box step2">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">Really Sure?</div>
+    <div class="confirm-msg">Unanswered questions will be marked as <strong style="color:var(--red)">incorrect</strong>.<br>This action is <strong>permanent</strong> — you cannot go back.</div>
+    <div class="confirm-btns">
+      <button class="confirm-proceed" onclick="confirmStep3()">Yes, I'm Sure →</button>
+      <button class="confirm-back" onclick="closeConfirm()">← Go Back</button>
+    </div>
+  </div>
+</div>
+<div class="confirm-overlay" id="confirm-overlay-3">
+  <div class="confirm-box step3">
+    <div class="confirm-icon">🔴</div>
+    <div class="confirm-title">Last Chance!</div>
+    <div class="confirm-msg">Once submitted, the activity is <strong>locked</strong>.<br>No changes can be made.</div>
+    <div class="confirm-btns">
+      <button class="confirm-proceed" onclick="finalSubmit()">Submit Final Answers</button>
+      <button class="confirm-back" onclick="closeConfirm()">← Go Back</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── COPY & KEY PROTECTION ────────────────────────
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&['c','a','u','s','p'].includes(e.key.toLowerCase()))e.preventDefault();
+  if(e.key==='F5'||(e.ctrlKey&&e.key.toLowerCase()==='r'))e.preventDefault();
+  if(e.key==='F12')e.preventDefault();
+  if(e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(e.key.toLowerCase()))e.preventDefault();
+});
+
+// ── DEVTOOLS DETECTION ───────────────────────────
+(function devBlock(){
+  function check(){
+    const t=performance.now();
+    debugger;
+    if(performance.now()-t>100){
+      document.getElementById('devtools-block')?.classList.add('show');
+    } else {
+      document.getElementById('devtools-block')?.classList.remove('show');
+    }
+  }
+  setInterval(check,1000);
+  const threshold=160;
+  const sizeCheck=()=>{
+    const widthDiff=window.outerWidth-window.innerWidth>threshold;
+    const heightDiff=window.outerHeight-window.innerHeight>threshold;
+    if(widthDiff||heightDiff){
+      document.getElementById('devtools-block')?.classList.add('show');
+    } else {
+      document.getElementById('devtools-block')?.classList.remove('show');
+    }
+  };
+  window.addEventListener('resize',sizeCheck);
+  sizeCheck();
+})();
+
+// ── PULL-TO-REFRESH BLOCK ────────────────────────
+let lastTouchY=0;
+document.addEventListener('touchstart',e=>{lastTouchY=e.touches[0].clientY;},{passive:false});
+document.addEventListener('touchmove',e=>{
+  const dy=e.touches[0].clientY-lastTouchY;
+  if(dy>0&&window.scrollY===0)e.preventDefault();
+},{passive:false});
+
+// ── ROSTER ──────────────────────────────────────
+const ROSTER = {
+  "22-10257":"Abad, Noble Agagon",
+  "24-113347":"Abad, Rexther Aquino",
+  "22-10647":"Agabas, Redentor Ao-as",
+  "25-114742":"Addamo, Jasmine Mosing",
+  "25-115412":"Alib-on, Marian Eppes",
+  "25-115305":"Almeda, Mark Anthony Dumawat",
+  "25-115327":"Alwiyao, Pyra Lunes",
+  "25-116941":"Amangao, Jordan Bonggawen",
+  "23-18740":"Ampoc, Abigail Awid",
+  "24-112684":"Ampilis, Restler Gonnay",
+  "23-110233":"Anggowos, Alethea Judea Dumpao",
+  "24-113590":"Ansang, Kevin Dawagan",
+  "25-114789":"Ariel, Jonathan Velasquez",
+  "25-115300":"Awing, Jerrymi Gaybon",
+  "23-19390":"Badong, Denver Bagwingan",
+  "23-19881":"Baes, Ryan Clyde Brillantes",
+  "23-19348":"Bagni, Cyrill Jack Lang-ay",
+  "24-113404":"Baglinit, Kian Vince Liagao",
+  "24-113600":"Baguiwan, Farah Shane Bantor",
+  "23-18751":"Balaleng, Christian Gerald Soriano",
+  "23-110712":"Balansi, Jared Alinduat",
+  "25-115265":"Balawag, Bella Tiwang",
+  "25-114774":"Baliwag, Rocky Lumbaya",
+  "25-116177":"Bangngayon, Braile Sangdaan",
+  "24-113299":"Basitao, Mark Anthony Dangani",
+  "23-110113":"Bog-ac, Freda Sullin",
+  "25-115092":"Bolos, Kate Angel Tawagon",
+  "23-110484":"Bommosao, Jamaica Lagwasi",
+  "25-115383":"Bunagan, Jesica Dawaton",
+  "25-115517":"Cacatian, Milkee Lorain Buccao",
+  "24-214190":"Cagdan, Donalyn Dayacus",
+  "20-01749":"Caligner, Ham Bitao",
+  "24-111766":"Camaddo, Erica Jane Baluga",
+  "25-114779":"Cammagay, Christine Jea Dela Torre",
+  "22-10033":"Camayang, Kenny Joy Manadao",
+  "23-19761":"Coplaten, Jhacel Beo Aquino",
+  "24-112829":"Dalwines, Ivie Rose Anggaboy",
+  "23-19774":"Dappay, Kyle Anniban",
+  "23-110443":"Dasayon, Jesbert Agusil",
+  "23-19259":"Dayawon, Nathaniel Recto",
+  "23-211235":"Dela Cruz, Melvin Licuanan",
+  "14-11811":"Dickly, Ralph Clinton Tumalding",
+  "24-112486":"Dompi, Ashlei Bulawit",
+  "20-00411":"Dumacyon, Abegail Daogas",
+  "23-110453":"Duclawit, John Rey Moctao",
+  "24-113841":"Ducusin, Aaron James Ay-yoc",
+  "24-113265":"Duguit, Alexander Ramirez",
+  "23-19211":"Esican, Goldamir Dumilam",
+  "19-10382":"Flores, Christian Dave Geron",
+  "22-10319":"Flores, Romelio Asencio Jr.",
+  "23-18718":"Gaano, Galeli Paran",
+  "21-11642":"Gacayon, Ryan Dagsi",
+  "21-20063":"Gandalera, Jefferson Lumbaya",
+  "23-19922":"Ganon, Glady Gothos",
+  "25-115406":"Galong, Kristal Joy Bulayang",
+  "24-113232":"Gamongan, Romando Wandaga Jr",
+  "23-18755":"Garcia, Gerald Liw-liw",
+  "23-110324":"Gasatan, Rafael Dona-al",
+  "23-19884":"Gayagay, Aaron Dawaton",
+  "23-19005":"Gayyaman, Kobi Oga-oy",
+  "24-113263":"Gonnay, Shaira Mae Toppi",
+  "25-114665":"Gonzales, Mika Ella Samuel",
+  "23-18952":"Goyagoy, Bea Banson",
+  "24-113356":"Guiawan, April Jen Gupa-al",
+  "25-116262":"Gudayon, Mievan Rohe Lingayo",
+  "23-19994":"Gumanab, Lander Ambayoyong",
+  "23-110005":"Gunaban, Lemuel Chumawar",
+  "23-19202":"Jose, Virny Carl Carbonel",
+  "23-110251":"Lapaddic, Daver Goef Dimmog",
+  "24-113294":"Lay-og, Evandel Maggay",
+  "23-110502":"Lasang, Laiza Beth Basungit",
+  "23-110054":"Lassin, Rudy Tayab",
+  "24-111782":"Lassin, Sherwin Palat",
+  "23-19667":"Liyaban, Rowell Saguibo",
+  "25-116943":"Magalim, Jerwin Bang-as",
+  "24-112689":"Magmao, Mark Fawas",
+  "23-19254":"Mandiguing, Jeyoh Bantiag",
+  "24-113099":"Manuel, Sidrac Cuantis",
+  "25-116783":"Maribbay, Owenn Destiny Dangiwan",
+  "23-19382":"Nieves, Riza Mundo",
+  "23-18976":"Oggas, June Kaiseir Magwangan",
+  "24-214079":"Osalla, Orlando Jr. Gurengad",
+  "23-19225":"Pacites, Shawie Khate Sabawil",
+  "23-110480":"Pallogan, Daryl Tucnang",
+  "25-115788":"Panabang, Rafael Garzon",
+  "24-113701":"Pascua, Sheena Cleen Dalingay",
+  "20-10026":"Ramos, Jan Chynne Myrrh Duclayan",
+  "23-19280":"Rimando, Ian Almeda",
+  "25-116784":"Ritual, Cendric Castueras",
+  "24-113994":"Sabino, Jomel Canao",
+  "24-111524":"Saliw-an, Rundel Bangao",
+  "25-116949":"Salingbay, Rolando Linnayao",
+  "23-19241":"Samoy, Jay-ar Bagiwong",
+  "24-112705":"Sapao, David Tandingan",
+  "25-115427":"Sawadan, Jeslee Lammawin",
+  "24-113253":"Sawatang, Irish Paclay",
+  "25-115149":"Siblawan, Bernard Javilla",
+  "25-116164":"Silao, Dimple Tiggangay",
+  "21-10145":"Suma-il, Marcelo Sao-ic Jr.",
+  "23-19999":"Tagaban, Reanne Heart Toledo",
+  "23-19317":"Tambao, Darling Oribes",
+  "19-10815":"Tega, Rynedel Viernes",
+  "24-113035":"Tolentino, Ruzel Clyde Diocares",
+  "24-113229":"Valdez, Justine Dave Ngayom",
+  "24-113456":"Wangli, Derick Carl Lumasi",
+  "22-11236":"Warding, Joshua Macoy M.",
+  "1234567890":"Admin",
+};
+
+// ── LOGIN ────────────────────────────────────────
+let currentUser=null;
+document.getElementById('login-id').addEventListener('input',()=>{
+  const id=document.getElementById('login-id').value.trim();
+  if(!id){
+    document.getElementById('login-id').className='login-input';
+    document.getElementById('login-hint').textContent='';
+    document.getElementById('login-hint').className='login-hint';
+    document.getElementById('login-welcome').style.display='none';
+    document.getElementById('login-btn').disabled=true;return;
+  }
+  const name=ROSTER[id];
+  if(name){
+    document.getElementById('login-id').className='login-input ok';
+    document.getElementById('login-hint').textContent='✓ ID recognized';
+    document.getElementById('login-hint').className='login-hint ok';
+    document.getElementById('login-welcome').innerHTML=`Welcome, <strong>${name}</strong>!<br>Topic: Loops &nbsp;·&nbsp; 50 questions &nbsp;·&nbsp; 60 min`;
+    document.getElementById('login-welcome').style.display='block';
+    document.getElementById('login-btn').disabled=false;
+  } else {
+    document.getElementById('login-id').className='login-input err';
+    document.getElementById('login-hint').textContent='✗ ID not found in roster';
+    document.getElementById('login-hint').className='login-hint err';
+    document.getElementById('login-welcome').style.display='none';
+    document.getElementById('login-btn').disabled=true;
+  }
+});
+function attemptLogin(){
+  const id=document.getElementById('login-id').value.trim();
+  const name=ROSTER[id];
+  if(!name)return;
+  currentUser={id,name};
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-shell').style.display='block';
+  document.getElementById('user-tag').textContent=name;
+  initActivity();
+  document.getElementById('pred-overlay').classList.add('show');
+}
+
+// ── TIMER ────────────────────────────────────────
+let timerSecs=60*60,timerIv=null,finished=false;
+function startTimer(){
+  timerIv=setInterval(()=>{
+    timerSecs--;updateTimerUI();
+    if(timerSecs<=0){clearInterval(timerIv);timeUp();}
+  },1000);
+}
+function updateTimerUI(){
+  const m=Math.floor(Math.abs(timerSecs)/60),s=Math.abs(timerSecs)%60;
+  const str=(timerSecs<0?'-':'')+m+':'+String(s).padStart(2,'0');
+  const el=document.getElementById('gtimer-num');
+  const dot=document.getElementById('gtimer-dot');
+  el.textContent=str;
+  if(finished){el.className='gtimer-num off';dot.className='gtimer-dot off';return;}
+  if(timerSecs<=120){el.className='gtimer-num urgent';dot.className='gtimer-dot urgent';}
+  else if(timerSecs<=600){el.className='gtimer-num warn';dot.className='gtimer-dot warn';}
+}
+function timeUp(){document.getElementById('timeup-overlay').classList.add('show');}
+function forceFinish(){
+  document.getElementById('timeup-overlay').classList.remove('show');
+  scores=scores.map(s=>s===null?false:s);
+  showResult();
+}
+
+// ── QUESTION BANK ─────────────────────────────────
+const QBANK = [
+{id:1,title:'for loop — basic syntax',type:'mc',diff:'easy',
+ q:'Which part of a <code>for</code> loop runs only <strong>once</strong> at the very beginning?',
+ opts:['Condition','Update expression','Initialization','Loop body'],correct:2,
+ fb_ok:'✓ The initialization (e.g., int i=0) runs exactly once before anything else.',
+ fb_fail:'✗ The initialization runs once. The condition is checked each iteration; the update runs after each body.'},
+
+{id:2,title:'for loop — count output',type:'predict',diff:'easy',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p2a',sym:'$',ph:'exact output with spaces...'}],
+ answers:['1 2 3 '],
+ fb_ok:'✓ i goes 1, 2, 3 — each printed with a space after.',
+ fb_fail:'✗ i starts at 1, stops when i>3. Prints "1 2 3 " (each followed by a space).'},
+
+{id:3,title:'for loop — zero iterations',type:'mc',diff:'easy',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">5</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'How many times does the loop body execute?',
+ opts:['0 times','1 time','3 times','5 times'],correct:0,
+ fb_ok:'✓ 5 < 3 is false immediately — the body never runs.',
+ fb_fail:'✗ The condition (i < 3) is checked first. Since 5 < 3 is false, the body runs 0 times.'},
+
+{id:4,title:'for loop — decrement',type:'predict',diff:'easy',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">&gt;=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">--</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p4a',sym:'$',ph:'exact output...'}],
+ answers:['3 2 1 '],
+ fb_ok:'✓ i counts down: 3, 2, 1 — each followed by a space.',
+ fb_fail:'✗ i starts at 3, decrements each time, stops when i < 1. Prints "3 2 1 ".'},
+
+{id:5,title:'for loop — iteration count',type:'fill',diff:'easy',
+ q:'A loop runs <code>for(int i=0; i&lt;10; i++)</code>. How many times does the body execute?',
+ ph:'enter a number',answers:['10'],
+ fb_ok:'✓ i goes 0,1,2,...,9 — that is 10 iterations.',
+ fb_fail:'✗ i goes from 0 up to (but not including) 10 → 10 iterations total.'},
+
+{id:6,title:'for loop — step by 2',type:'predict',diff:'easy',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">6</span><span class="punct">;</span> <span class="var">i</span><span class="op">+=</span><span class="num">2</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p6a',sym:'$',ph:'exact output...'}],
+ answers:['0 2 4 6 '],
+ fb_ok:'✓ i steps 0→2→4→6. Each printed with a space.',
+ fb_fail:'✗ i+=2 means i increases by 2 each time. Values: 0, 2, 4, 6.'},
+
+{id:7,title:'for loop — variable scope',type:'mc',diff:'easy',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) { }</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span><span class="punct">;</span>`,
+ q:'What happens when <code>cout &lt;&lt; i</code> is reached after the loop?',
+ opts:['Prints 3','Prints 0','Compile error — i is out of scope','Runtime error'],correct:2,
+ fb_ok:"✓ i is declared inside the for-loop's init; it's out of scope after the loop.",
+ fb_fail:"✗ A variable declared in the for(int i=...) header is scoped to that loop only."},
+
+{id:8,title:'for loop — body runs once',type:'predict',diff:'easy',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Go"</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p8a',sym:'$',ph:'exact output...'}],
+ answers:['Go'],
+ fb_ok:'✓ i=1 satisfies i<=1, prints "Go", increments to 2, condition fails. Runs once.',
+ fb_fail:'✗ The condition is 1<=1 (true once). After printing and i++, i becomes 2 and 2<=1 is false.'},
+
+{id:9,title:'for loop — accumulator',type:'predict',diff:'med',
+ code:`<span class="kw">int</span> <span class="var">sum</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">4</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">sum</span> <span class="op">+=</span> <span class="var">i</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">sum</span><span class="punct">;</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p9a',sym:'$',ph:'number...'}],
+ answers:['10'],
+ fb_ok:'✓ sum = 1+2+3+4 = 10.',
+ fb_fail:'✗ Each iteration adds i to sum. 0+1+2+3+4 = 10.'},
+
+{id:10,title:'for loop — counter variable',type:'predict',diff:'med',
+ code:`<span class="kw">int</span> <span class="var">count</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">10</span><span class="punct">;</span> <span class="var">i</span><span class="op">&gt;</span><span class="num">0</span><span class="punct">;</span> <span class="var">i</span><span class="op">-=</span><span class="num">3</span><span class="punct">) {</span>\n    <span class="var">count</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">count</span><span class="punct">;</span>`,
+ q:'What is printed? (Trace i: 10, 7, 4, 1, then i becomes -2)',
+ inputs:[{id:'p10a',sym:'$',ph:'number...'}],
+ answers:['4'],
+ fb_ok:'✓ i takes values 10, 7, 4, 1 (all > 0) → 4 iterations.',
+ fb_fail:'✗ i: 10→7→4→1 (all pass i>0). Next: 1-3=-2, fails. count increments 4 times.'},
+
+{id:11,title:'for loop — bug hunt missing semicolon',type:'bug',diff:'med',
+ q:'Which line has the <strong style="color:var(--red)">syntax error</strong>?',
+ buglines:[
+   {ln:1,code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span> <span class="var">i</span><span class="op">&lt;</span><span class="num">5</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>`},
+   {ln:2,code:`    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>`},
+   {ln:3,code:`<span class="punct">}</span>`},
+ ],correctLine:1,
+ fb_ok:'✓ Line 1: missing semicolon between int i=0 and i<5.',
+ fb_fail:'✗ The for header needs two semicolons: for(init; condition; update). Line 1 is missing the first one.'},
+
+{id:12,title:'for loop — nested output shape',type:'predict',diff:'med',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"*"</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"\\n"</span><span class="punct">;</span>\n<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">j</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">j</span><span class="op">&lt;=</span><span class="num">2</span><span class="punct">;</span> <span class="var">j</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"#"</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed? (two separate for loops)',
+ inputs:[
+   {id:'p12a',sym:'line 1',ph:'first line output...'},
+   {id:'p12b',sym:'line 2',ph:'second line output...'}
+ ],
+ answers:['***','##'],
+ fb_ok:'✓ First loop: ***, newline. Second loop: ##.',
+ fb_fail:'✗ First loop runs 3 times printing *, then newline. Second runs 2 times printing #.'},
+
+{id:13,title:'for loop — match loop parts',type:'match',diff:'med',
+ q:'Match each part of <code>for(int i=0; i&lt;5; i++)</code> to its role.',
+ chips:['int i=0','i<5','i++','Loop body'],
+ dropDescs:['Initialization — runs once','Condition — checked each time','Update — runs after each body','Executed repeatedly'],
+ answers:['int i=0','i<5','i++','Loop body'],
+ fb_ok:'✓ Correct! init → condition → body → update → condition → ...',
+ fb_fail:'✗ for(init; condition; update) { body }. Init runs once, condition is checked each time, update follows body.'},
+
+{id:14,title:'for loop — off-by-one',type:'mc',diff:'med',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;</span><span class="num">5</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is the last value printed?',
+ opts:['3','4','5','6'],correct:1,
+ fb_ok:'✓ i goes 1,2,3,4. When i=5, condition 5<5 is false — stops before printing 5.',
+ fb_fail:'✗ i < 5 means i stops at 4. The last printed value is 4.'},
+
+{id:15,title:'for loop — product accumulator',type:'predict',diff:'hard',
+ code:`<span class="kw">int</span> <span class="var">p</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">4</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="var">p</span> <span class="op">*=</span> <span class="var">i</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">p</span><span class="punct">;</span>`,
+ q:'What is printed? (p = 1×2×3×4)',
+ inputs:[{id:'p15a',sym:'$',ph:'number...'}],
+ answers:['24'],
+ fb_ok:'✓ 1×2×3×4 = 24.',
+ fb_fail:'✗ p starts at 1. Multiply: 1*1=1, 1*2=2, 2*3=6, 6*4=24.'},
+
+{id:16,title:'for loop — infinite loop bug',type:'bug',diff:'hard',
+ q:'Which line causes an <strong style="color:var(--red)">infinite loop</strong>?',
+ buglines:[
+   {ln:1,code:`<span class="kw">int</span> <span class="var">total</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>`},
+   {ln:2,code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&gt;</span><span class="num">0</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>`},
+   {ln:3,code:`    <span class="var">total</span> <span class="op">+=</span> <span class="var">i</span><span class="punct">;</span>`},
+   {ln:4,code:`<span class="punct">}</span>`},
+ ],correctLine:2,
+ fb_ok:'✓ Line 2: i starts at 1 and only increases, so i>0 is always true — infinite loop.',
+ fb_fail:'✗ Line 2 has the bug. i starts at 1 and i++ makes it grow. i>0 will never become false.'},
+
+{id:17,title:'for loop — break statement',type:'predict',diff:'hard',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">10</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">if</span><span class="punct">(</span><span class="var">i</span> <span class="op">==</span> <span class="num">4</span><span class="punct">)</span> <span class="kw">break</span><span class="punct">;</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p17a',sym:'$',ph:'exact output...'}],
+ answers:['1 2 3 '],
+ fb_ok:'✓ Prints 1, 2, 3. When i=4, break exits the loop before cout runs.',
+ fb_fail:'✗ break exits immediately when i==4. Only 1, 2, 3 are printed before that.'},
+
+{id:18,title:'for loop — continue statement',type:'predict',diff:'hard',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">5</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">if</span><span class="punct">(</span><span class="var">i</span> <span class="op">==</span> <span class="num">3</span><span class="punct">)</span> <span class="kw">continue</span><span class="punct">;</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p18a',sym:'$',ph:'exact output...'}],
+ answers:['1 2 4 5 '],
+ fb_ok:'✓ continue skips the rest of the body when i=3, so 3 is never printed.',
+ fb_fail:'✗ continue skips cout for i=3 only. All other values (1,2,4,5) are printed.'},
+
+{id:19,title:'while loop — basic syntax',type:'mc',diff:'easy',
+ q:'When does a <code>while</code> loop stop executing?',
+ opts:['After exactly one iteration','When its condition becomes false','When break is encountered anywhere','When the variable reaches 0'],correct:1,
+ fb_ok:'✓ A while loop keeps running as long as its condition is true; it stops when the condition becomes false.',
+ fb_fail:'✗ The while loop re-checks its condition before each iteration and stops when it evaluates to false.'},
+
+{id:20,title:'while loop — simple countdown',type:'predict',diff:'easy',
+ code:`<span class="kw">int</span> <span class="var">n</span> <span class="op">=</span> <span class="num">3</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">n</span> <span class="op">&gt;</span> <span class="num">0</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">n</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n    <span class="var">n</span><span class="op">--</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p20a',sym:'$',ph:'exact output...'}],
+ answers:['3 2 1 '],
+ fb_ok:'✓ n counts down 3→2→1, printed each time before decrement.',
+ fb_fail:'✗ n starts at 3, prints then decrements each pass. When n=0, condition fails.'},
+
+{id:21,title:'while loop — zero iterations',type:'mc',diff:'easy',
+ code:`<span class="kw">int</span> <span class="var">x</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">x</span> <span class="op">&gt;</span> <span class="num">5</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Hello"</span><span class="punct">;</span>\n    <span class="var">x</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ opts:['Hello','HelloHelloHello','Nothing — body never executes','Compile error'],correct:2,
+ fb_ok:'✓ 0 > 5 is false immediately. The while body never runs.',
+ fb_fail:'✗ The condition is checked first. 0 > 5 is false, so the body is skipped entirely.'},
+
+{id:22,title:'while loop — fill the blank',type:'fill',diff:'easy',
+ code:`<span class="kw">int</span> <span class="var">i</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">i</span> <span class="op">&lt;=</span> <span class="num">5</span><span class="punct">) {</span>\n    <span class="var">i</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="cmt">// After the loop, i = ?</span>`,
+ q:'What is the value of <code>i</code> after the loop exits?',
+ ph:'enter a number',answers:['6'],
+ fb_ok:'✓ i goes 1→2→3→4→5→6. When i=6, 6<=5 is false and the loop exits. i is 6.',
+ fb_fail:'✗ i increments past 5 to 6. The condition 6<=5 fails, so the loop exits with i=6.'},
+
+{id:23,title:'while loop — update missing bug',type:'bug',diff:'easy',
+ q:'Which line causes this loop to run <strong style="color:var(--red)">forever</strong>?',
+ buglines:[
+   {ln:1,code:`<span class="kw">int</span> <span class="var">x</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>`},
+   {ln:2,code:`<span class="kw">while</span><span class="punct">(</span><span class="var">x</span> <span class="op">&lt;=</span> <span class="num">5</span><span class="punct">) {</span>`},
+   {ln:3,code:`    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">x</span><span class="punct">;</span>`},
+   {ln:4,code:`<span class="punct">}</span>`},
+ ],correctLine:3,
+ fb_ok:'✓ Line 3: x is never incremented, so x<=5 stays true forever.',
+ fb_fail:'✗ Line 3 is the problem. Without updating x, the condition never becomes false — infinite loop.'},
+
+{id:24,title:'while vs for — concept match',type:'match',diff:'easy',
+ q:'Match each description to the correct loop type.',
+ chips:['Checks condition before first run','Best when iterations are known','Checks condition after first run','Best when iterations are unknown'],
+ dropDescs:['for loop','for loop','do-while loop','while loop'],
+ answers:['Checks condition before first run','Best when iterations are known','Checks condition after first run','Best when iterations are unknown'],
+ fb_ok:'✓ for: pre-checked, count-controlled. do-while: post-checked. while: condition-controlled.',
+ fb_fail:'✗ for/while check condition first. do-while checks after. for suits known counts; while suits unknown.'},
+
+{id:25,title:'while loop — accumulator',type:'predict',diff:'med',
+ code:`<span class="kw">int</span> <span class="var">n</span> <span class="op">=</span> <span class="num">1</span><span class="punct">,</span> <span class="var">total</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">n</span> <span class="op">&lt;=</span> <span class="num">5</span><span class="punct">) {</span>\n    <span class="var">total</span> <span class="op">+=</span> <span class="var">n</span><span class="punct">;</span>\n    <span class="var">n</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">total</span><span class="punct">;</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p25a',sym:'$',ph:'number...'}],
+ answers:['15'],
+ fb_ok:'✓ 1+2+3+4+5 = 15.',
+ fb_fail:'✗ total accumulates 1+2+3+4+5. The sum is 15.'},
+
+{id:26,title:'while loop — string length tracer',type:'predict',diff:'med',
+ code:`<span class="kw">int</span> <span class="var">i</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">string</span> <span class="var">word</span> <span class="op">=</span> <span class="str">"loop"</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">i</span> <span class="op">&lt;</span> <span class="var">word</span><span class="punct">.</span><span class="fn">length</span><span class="punct">()) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">word</span><span class="punct">[</span><span class="var">i</span><span class="punct">];</span>\n    <span class="var">i</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p26a',sym:'$',ph:'exact output...'}],
+ answers:['loop'],
+ fb_ok:'✓ Iterates through each character of "loop" and prints it.',
+ fb_fail:'✗ i goes 0,1,2,3. word[0]="l", [1]="o", [2]="o", [3]="p". Output: "loop".'},
+
+{id:27,title:'while loop — break on condition',type:'predict',diff:'hard',
+ code:`<span class="kw">int</span> <span class="var">x</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="kw">true</span><span class="punct">) {</span>\n    <span class="var">x</span><span class="op">++</span><span class="punct">;</span>\n    <span class="kw">if</span><span class="punct">(</span><span class="var">x</span> <span class="op">==</span> <span class="num">3</span><span class="punct">)</span> <span class="kw">break</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">x</span><span class="punct">;</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p27a',sym:'$',ph:'number...'}],
+ answers:['3'],
+ fb_ok:'✓ x increments to 3, then break exits. cout prints 3.',
+ fb_fail:'✗ x goes 1, 2, 3. When x==3, break fires and exits. x is 3 after the loop.'},
+
+{id:28,title:'while loop — odd numbers',type:'predict',diff:'hard',
+ code:`<span class="kw">int</span> <span class="var">n</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">n</span> <span class="op">&lt;</span> <span class="num">10</span><span class="punct">) {</span>\n    <span class="kw">if</span><span class="punct">(</span><span class="var">n</span> <span class="op">%</span> <span class="num">2</span> <span class="op">!=</span> <span class="num">0</span><span class="punct">)</span>\n        <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">n</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n    <span class="var">n</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p28a',sym:'$',ph:'exact output...'}],
+ answers:['1 3 5 7 9 '],
+ fb_ok:'✓ Only odd values (n%2!=0) are printed: 1,3,5,7,9.',
+ fb_fail:'✗ n%2!=0 is true for 1,3,5,7,9. Even numbers are skipped. Output: "1 3 5 7 9 ".'},
+
+{id:29,title:'while loop — off-by-one danger',type:'mc',diff:'hard',
+ code:`<span class="kw">int</span> <span class="var">i</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">i</span> <span class="op">!=</span> <span class="num">10</span><span class="punct">) {</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n    <span class="var">i</span> <span class="op">+=</span> <span class="num">3</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What happens with this loop?',
+ opts:['Prints 1 4 7 then stops','Prints 1 4 7 10 then stops','Runs forever — i skips over 10','Compile error'],correct:2,
+ fb_ok:'✓ i goes 1,4,7,10 — but here i=7+3=10, hits exactly, so it actually stops. This is a dangerously brittle pattern though.',
+ fb_fail:'✗ i goes 1,4,7,10. When i=10, 10!=10 is false — but only because the step lands exactly on 10. Any other step size could skip it and loop forever.'},
+
+{id:30,title:'while loop — find the error',type:'bug',diff:'hard',
+ q:'Which line contains the logical error that causes this to print one extra iteration?',
+ buglines:[
+   {ln:1,code:`<span class="kw">int</span> <span class="var">i</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>`},
+   {ln:2,code:`<span class="kw">while</span><span class="punct">(</span><span class="var">i</span> <span class="op">&lt;=</span> <span class="num">5</span><span class="punct">) {</span>`},
+   {ln:3,code:`    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">; </span><span class="var">i</span><span class="op">++</span><span class="punct">;</span>`},
+   {ln:4,code:`<span class="punct">}</span>`},
+ ],correctLine:2,
+ fb_ok:"✓ Line 2: <= 5 includes i=5. Using < 5 would stop before printing 5.",
+ fb_fail:"✗ Line 2's condition <= 5 includes 5. If the intent was to stop before 5, it should be i < 5."},
+
+{id:31,title:'do-while — key difference',type:'mc',diff:'easy',
+ q:'What makes a <code>do-while</code> loop different from a <code>while</code> loop?',
+ opts:['do-while runs faster','do-while always executes its body at least once','do-while cannot use break','do-while requires a for-style update'],correct:1,
+ fb_ok:'✓ The do-while checks its condition after the body, guaranteeing at least one execution.',
+ fb_fail:'✗ The defining feature: do-while executes the body first, then checks the condition.'},
+
+{id:32,title:'do-while — false condition',type:'predict',diff:'easy',
+ code:`<span class="kw">int</span> <span class="var">x</span> <span class="op">=</span> <span class="num">10</span><span class="punct">;</span>\n<span class="kw">do</span> <span class="punct">{</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"Run"</span><span class="punct">;</span>\n<span class="punct">}</span> <span class="kw">while</span><span class="punct">(</span><span class="var">x</span> <span class="op">&lt;</span> <span class="num">5</span><span class="punct">);</span>`,
+ q:'What is printed? (condition is false from the start)',
+ inputs:[{id:'p32a',sym:'$',ph:'exact output...'}],
+ answers:['Run'],
+ fb_ok:'✓ Body runs once before condition is checked. x<5 is false, so it stops after one run.',
+ fb_fail:'✗ do-while always runs the body at least once. Even though 10<5 is false, "Run" prints once.'},
+
+{id:33,title:'do-while — countdown',type:'predict',diff:'med',
+ code:`<span class="kw">int</span> <span class="var">i</span> <span class="op">=</span> <span class="num">3</span><span class="punct">;</span>\n<span class="kw">do</span> <span class="punct">{</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n    <span class="var">i</span><span class="op">--</span><span class="punct">;</span>\n<span class="punct">}</span> <span class="kw">while</span><span class="punct">(</span><span class="var">i</span> <span class="op">&gt;</span> <span class="num">0</span><span class="punct">);</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p33a',sym:'$',ph:'exact output...'}],
+ answers:['3 2 1 '],
+ fb_ok:'✓ Prints 3, then 2, then 1. After printing 1 and decrementing, i=0, condition fails.',
+ fb_fail:'✗ i goes 3→2→1. After printing 1, i becomes 0 and 0>0 is false. Stops.'},
+
+{id:34,title:'do-while — semicolon bug',type:'bug',diff:'med',
+ q:'Which line has the <strong style="color:var(--red)">syntax error</strong>?',
+ buglines:[
+   {ln:1,code:`<span class="kw">int</span> <span class="var">n</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>`},
+   {ln:2,code:`<span class="kw">do</span> <span class="punct">{</span>`},
+   {ln:3,code:`    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">n</span><span class="op">++</span><span class="punct">;</span>`},
+   {ln:4,code:`<span class="punct">}</span> <span class="kw">while</span><span class="punct">(</span><span class="var">n</span> <span class="op">&lt;=</span> <span class="num">3</span><span class="punct">)</span>`},
+ ],correctLine:4,
+ fb_ok:'✓ Line 4: the while(...) at the end of a do-while MUST end with a semicolon.',
+ fb_fail:'✗ Line 4 is missing the semicolon. do { } while(condition); — the semicolon after ) is required.'},
+
+{id:35,title:'do-while — accumulate once even if false',type:'predict',diff:'med',
+ code:`<span class="kw">int</span> <span class="var">val</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">int</span> <span class="var">n</span> <span class="op">=</span> <span class="num">100</span><span class="punct">;</span>\n<span class="kw">do</span> <span class="punct">{</span>\n    <span class="var">val</span> <span class="op">+=</span> <span class="num">5</span><span class="punct">;</span>\n<span class="punct">}</span> <span class="kw">while</span><span class="punct">(</span><span class="var">n</span> <span class="op">&lt;</span> <span class="num">10</span><span class="punct">);</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">val</span><span class="punct">;</span>`,
+ q:'What is printed? (n is 100, never satisfies n < 10)',
+ inputs:[{id:'p35a',sym:'$',ph:'number...'}],
+ answers:['5'],
+ fb_ok:'✓ Body runs once (val becomes 5), then n<10 is false. val = 5.',
+ fb_fail:'✗ do-while guarantees one execution. val+=5 runs once → val=5. Then n<10 fails.'},
+
+{id:36,title:'do-while — total iterations',type:'fill',diff:'med',
+ code:`<span class="kw">int</span> <span class="var">i</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n<span class="kw">do</span> <span class="punct">{</span>\n    <span class="var">i</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span> <span class="kw">while</span><span class="punct">(</span><span class="var">i</span> <span class="op">&lt;</span> <span class="num">5</span><span class="punct">);</span>`,
+ q:'How many times does the loop body execute?',
+ ph:'enter a number',answers:['4'],
+ fb_ok:'✓ i: 1→2→3→4→5. Body runs when i=1,2,3,4 (4 times). After i=5, condition fails.',
+ fb_fail:'✗ i starts at 1. Body runs and increments: i=2 (check 2<5 ✓), i=3 (✓), i=4 (✓), i=5 (5<5 ✗). 4 iterations.'},
+
+{id:37,title:'do-while — correct syntax form',type:'mc',diff:'med',
+ q:'Which is the correct syntax for a <code>do-while</code> loop?',
+ opts:['do { } while(cond)','do { } while(cond);','while(cond) do { }','do while(cond) { }'],correct:1,
+ fb_ok:'✓ do { body } while(condition); — the semicolon after the closing parenthesis is mandatory.',
+ fb_fail:'✗ The correct form is: do { } while(condition); — note the semicolon at the end.'},
+
+{id:38,title:'do-while — expert trace',type:'predict',diff:'xhard',
+ code:`<span class="kw">int</span> <span class="var">a</span> <span class="op">=</span> <span class="num">2</span><span class="punct">,</span> <span class="var">b</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">do</span> <span class="punct">{</span>\n    <span class="var">b</span> <span class="op">+=</span> <span class="var">a</span><span class="punct">;</span>\n    <span class="var">a</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span> <span class="kw">while</span><span class="punct">(</span><span class="var">a</span> <span class="op">&lt;=</span> <span class="num">4</span><span class="punct">);</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">b</span><span class="punct">;</span>`,
+ q:'What is printed? (trace a and b each iteration)',
+ inputs:[{id:'p38a',sym:'$',ph:'number...'}],
+ answers:['9'],
+ fb_ok:'✓ a=2: b=0+2=2, a=3. a=3: b=2+3=5, a=4. a=4: b=5+4=9, a=5. 5<=4 false. b=9.',
+ fb_fail:'✗ Iter 1: b=2,a=3. Iter 2: b=5,a=4. Iter 3: b=9,a=5. 5<=4 fails. Print 9.'},
+
+{id:39,title:'nested for — total iterations',type:'fill',diff:'med',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">j</span><span class="op">=</span><span class="num">0</span><span class="punct">;</span> <span class="var">j</span><span class="op">&lt;</span><span class="num">4</span><span class="punct">;</span> <span class="var">j</span><span class="op">++</span><span class="punct">) {</span>\n        <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"X"</span><span class="punct">;</span>\n    <span class="punct">}</span>\n<span class="punct">}</span>`,
+ q:'How many times is "X" printed in total?',
+ ph:'enter a number',answers:['12'],
+ fb_ok:'✓ Outer loops 3 times, inner loops 4 times each. 3 × 4 = 12.',
+ fb_fail:'✗ Outer (i): 3 iterations. Inner (j): 4 iterations each outer pass. Total = 3 × 4 = 12.'},
+
+{id:40,title:'nested for — multiplication output',type:'predict',diff:'hard',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">2</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">j</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">j</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">j</span><span class="op">++</span><span class="punct">) {</span>\n        <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span><span class="op">*</span><span class="var">j</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n    <span class="punct">}</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"\\n"</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What are the two output lines?',
+ inputs:[
+   {id:'p40a',sym:'row 1',ph:'first row of output...'},
+   {id:'p40b',sym:'row 2',ph:'second row of output...'}
+ ],
+ answers:['1 2 3 ','2 4 6 '],
+ fb_ok:'✓ i=1: 1×1=1, 1×2=2, 1×3=3. i=2: 2×1=2, 2×2=4, 2×3=6.',
+ fb_fail:'✗ i=1: j goes 1,2,3 → prints 1 2 3. i=2: j goes 1,2,3 → prints 2 4 6.'},
+
+{id:41,title:'nested for — star triangle',type:'mc',diff:'hard',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">j</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">j</span><span class="op">&lt;=</span><span class="var">i</span><span class="punct">;</span> <span class="var">j</span><span class="op">++</span><span class="punct">) {</span>\n        <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"*"</span><span class="punct">;</span>\n    <span class="punct">}</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"\\n"</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What shape does this print?',
+ opts:['3 rows of 3 stars','A right triangle: 1 star, 2 stars, 3 stars','A right triangle: 3 stars, 2 stars, 1 star','A single row of 6 stars'],correct:1,
+ fb_ok:'✓ j runs up to i: row 1 → 1 star, row 2 → 2 stars, row 3 → 3 stars.',
+ fb_fail:'✗ Inner loop runs j=1 to j=i. When i=1: 1 star. i=2: 2 stars. i=3: 3 stars.'},
+
+{id:42,title:'nested loop — inner reset',type:'mc',diff:'hard',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">j</span><span class="op">=</span><span class="num">0</span><span class="punct">;</span> <span class="var">j</span><span class="op">&lt;</span><span class="num">2</span><span class="punct">;</span> <span class="var">j</span><span class="op">++</span><span class="punct">) {</span>\n        <span class="cmt">// j starts at 0 every outer iteration</span>\n    <span class="punct">}</span>\n<span class="punct">}</span>`,
+ q:'What happens to <code>j</code> each time the outer loop starts a new iteration?',
+ opts:['j continues from where it left off','j resets to 0 because the for(int j=0...) re-initializes it','j is undefined until assigned','j becomes equal to i'],correct:1,
+ fb_ok:'✓ The inner for re-declares and re-initializes j=0 on every outer iteration.',
+ fb_fail:'✗ Each time the inner for loop header is reached, int j=0 runs again, resetting j to 0.'},
+
+{id:43,title:'nested for — break only inner',type:'predict',diff:'xhard',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">j</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">j</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">j</span><span class="op">++</span><span class="punct">) {</span>\n        <span class="kw">if</span><span class="punct">(</span><span class="var">j</span> <span class="op">==</span> <span class="num">2</span><span class="punct">)</span> <span class="kw">break</span><span class="punct">;</span>\n        <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">i</span> <span class="op">&lt;&lt;</span> <span class="var">j</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n    <span class="punct">}</span>\n<span class="punct">}</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p43a',sym:'$',ph:'exact output...'}],
+ answers:['11 21 31 '],
+ fb_ok:'✓ j only reaches 1 before break. Each outer i prints i+"1": 11, 21, 31.',
+ fb_fail:'✗ break only exits the inner loop. For each i, j=1 prints, then j=2 triggers break. Output: "11 21 31 ".'},
+
+{id:44,title:'nested for — sum of grid',type:'predict',diff:'xhard',
+ code:`<span class="kw">int</span> <span class="var">s</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">j</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">j</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">j</span><span class="op">++</span><span class="punct">) {</span>\n        <span class="var">s</span> <span class="op">+=</span> <span class="var">i</span> <span class="op">+</span> <span class="var">j</span><span class="punct">;</span>\n    <span class="punct">}</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">s</span><span class="punct">;</span>`,
+ q:'What is printed? (s accumulates i+j for every combination)',
+ inputs:[{id:'p44a',sym:'$',ph:'number...'}],
+ answers:['36'],
+ fb_ok:'✓ Each of 9 pairs (i+j): row i=1: 2+3+4=9. i=2: 3+4+5=12. i=3: 4+5+6=15. 9+12+15=36.',
+ fb_fail:'✗ 9 combinations. i=1,j=1→2; i=1,j=2→3; i=1,j=3→4 (sum=9). i=2 sum=12. i=3 sum=15. Total=36.'},
+
+{id:45,title:'nested while — pyramid count',type:'predict',diff:'xhard',
+ code:`<span class="kw">int</span> <span class="var">i</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">i</span> <span class="op">&lt;=</span> <span class="num">3</span><span class="punct">) {</span>\n    <span class="kw">int</span> <span class="var">j</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n    <span class="kw">while</span><span class="punct">(</span><span class="var">j</span> <span class="op">&lt;=</span> <span class="var">i</span><span class="punct">) {</span>\n        <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">j</span> <span class="op">&lt;&lt;</span> <span class="str">" "</span><span class="punct">;</span>\n        <span class="var">j</span><span class="op">++</span><span class="punct">;</span>\n    <span class="punct">}</span>\n    <span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="str">"\\n"</span><span class="punct">;</span>\n    <span class="var">i</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>`,
+ q:'What are the three output lines?',
+ inputs:[
+   {id:'p45a',sym:'row 1',ph:'...'},
+   {id:'p45b',sym:'row 2',ph:'...'},
+   {id:'p45c',sym:'row 3',ph:'...'}
+ ],
+ answers:['1 ','1 2 ','1 2 3 '],
+ fb_ok:'✓ Row 1: j=1. Row 2: j=1,2. Row 3: j=1,2,3.',
+ fb_fail:'✗ j resets to 1 each outer pass. i=1: "1 ". i=2: "1 2 ". i=3: "1 2 3 ".'},
+
+{id:46,title:'nested loop — which loop is outer?',type:'mc',diff:'hard',
+ code:`<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">row</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">row</span><span class="op">&lt;=</span><span class="num">4</span><span class="punct">;</span> <span class="var">row</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">col</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">col</span><span class="op">&lt;=</span><span class="num">3</span><span class="punct">;</span> <span class="var">col</span><span class="op">++</span><span class="punct">) {</span>\n        <span class="cmt">// body</span>\n    <span class="punct">}</span>\n<span class="punct">}</span>`,
+ q:"How many times does the <em>inner</em> loop's body execute in total?",
+ opts:['4','3','7','12'],correct:3,
+ fb_ok:'✓ 4 outer iterations × 3 inner iterations = 12 total.',
+ fb_fail:'✗ The inner loop body runs 3 times per outer iteration. 4 outer × 3 inner = 12.'},
+
+{id:47,title:'loop types — best use case',type:'match',diff:'hard',
+ q:'Match each loop type to its best use case.',
+ chips:['for loop','while loop','do-while loop','nested loop'],
+ dropDescs:['Number of iterations is known upfront','Repeats until an unknown condition is met','Must execute the body at least once','Iterating over rows and columns of a grid'],
+ answers:['for loop','while loop','do-while loop','nested loop'],
+ fb_ok:'✓ for: count-controlled. while: condition-controlled. do-while: runs at least once. nested: multi-dimensional.',
+ fb_fail:'✗ for suits known counts; while suits unknown conditions; do-while guarantees one run; nested loops suit grids.'},
+
+{id:48,title:'loop — count even numbers',type:'predict',diff:'hard',
+ code:`<span class="kw">int</span> <span class="var">count</span> <span class="op">=</span> <span class="num">0</span><span class="punct">;</span>\n<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">1</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;=</span><span class="num">10</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">if</span><span class="punct">(</span><span class="var">i</span> <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span><span class="punct">)</span>\n        <span class="var">count</span><span class="op">++</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">count</span><span class="punct">;</span>`,
+ q:'What is printed?',
+ inputs:[{id:'p48a',sym:'$',ph:'number...'}],
+ answers:['5'],
+ fb_ok:'✓ Even numbers from 1–10: 2,4,6,8,10 → 5 even numbers.',
+ fb_fail:'✗ i%2==0 is true for 2,4,6,8,10. count increments 5 times.'},
+
+{id:49,title:'loop — tricky decrement tracer',type:'predict',diff:'xhard',
+ code:`<span class="kw">int</span> <span class="var">x</span> <span class="op">=</span> <span class="num">16</span><span class="punct">;</span>\n<span class="kw">while</span><span class="punct">(</span><span class="var">x</span> <span class="op">&gt;</span> <span class="num">1</span><span class="punct">) {</span>\n    <span class="var">x</span> <span class="op">/=</span> <span class="num">2</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">x</span><span class="punct">;</span>`,
+ q:'What is printed? (trace x: 16 → 8 → 4 → 2 → 1)',
+ inputs:[{id:'p49a',sym:'$',ph:'number...'}],
+ answers:['1'],
+ fb_ok:'✓ x: 16→8→4→2→1. When x=1, 1>1 is false. x=1 is printed.',
+ fb_fail:'✗ x halves each iteration: 16,8,4,2,1. At x=1, condition 1>1 fails. Output: 1.'},
+
+{id:50,title:'loop — expert multi-variable trace',type:'predict',diff:'xhard',
+ code:`<span class="kw">int</span> <span class="var">a</span> <span class="op">=</span> <span class="num">0</span><span class="punct">,</span> <span class="var">b</span> <span class="op">=</span> <span class="num">1</span><span class="punct">;</span>\n<span class="kw">for</span><span class="punct">(</span><span class="kw">int</span> <span class="var">i</span><span class="op">=</span><span class="num">0</span><span class="punct">;</span> <span class="var">i</span><span class="op">&lt;</span><span class="num">4</span><span class="punct">;</span> <span class="var">i</span><span class="op">++</span><span class="punct">) {</span>\n    <span class="kw">int</span> <span class="var">temp</span> <span class="op">=</span> <span class="var">a</span> <span class="op">+</span> <span class="var">b</span><span class="punct">;</span>\n    <span class="var">a</span> <span class="op">=</span> <span class="var">b</span><span class="punct">;</span>\n    <span class="var">b</span> <span class="op">=</span> <span class="var">temp</span><span class="punct">;</span>\n<span class="punct">}</span>\n<span class="var">cout</span> <span class="op">&lt;&lt;</span> <span class="var">b</span><span class="punct">;</span>`,
+ q:'What is printed? (this is the Fibonacci sequence: 0,1,1,2,3,5...)',
+ inputs:[{id:'p50a',sym:'$',ph:'number...'}],
+ answers:['5'],
+ fb_ok:'✓ i=0:b=1. i=1:b=2. i=2:b=3. i=3:b=5. After loop, b=5.',
+ fb_fail:'✗ Trace: (a,b): (0,1)→(1,1)→(1,2)→(2,3)→(3,5). After 4 iters, b=5.'}
+];
+
+// ── SHUFFLE ─────────────────────────────────────
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// ── STATE ────────────────────────────────────────
+let Q=[],scores=[],currentDragChipId=null,selectedChip=null;
+const TOTAL=QBANK.length;
+let tabLeaveCount=0,activityStarted=false,predictedBand=null;
+let warnAutoTimer=null;
+
+// ── TAB-LEAVE ────────────────────────────────────
+function dismissWarning(){
+  clearInterval(warnAutoTimer);
+  document.getElementById('warn-overlay').classList.remove('show');
+}
+document.addEventListener('visibilitychange',()=>{
+  if(!activityStarted||finished)return;
+  if(document.visibilityState==='hidden')return;
+  tabLeaveCount++;
+  // update live score display with penalty
+  updateScoreDisplay();
+  const el=document.getElementById('warn-overlay');
+  const countEl=document.getElementById('warn-count');
+  countEl.textContent=`Tab switch #${tabLeaveCount} · Total penalty: −${tabLeaveCount*5} pts`;
+  el.classList.add('show');
+  // auto-close countdown
+  let secs=5;
+  const cdEl=document.getElementById('warn-countdown');
+  cdEl.textContent=`Auto-closing in ${secs}s`;
+  clearInterval(warnAutoTimer);
+  warnAutoTimer=setInterval(()=>{
+    secs--;
+    if(secs<=0){clearInterval(warnAutoTimer);dismissWarning();}
+    else cdEl.textContent=`Auto-closing in ${secs}s`;
+  },1000);
+});
+
+function updateScoreDisplay(){
+  const ok=scores.filter(s=>s===true).length;
+  const penalty=tabLeaveCount*5;
+  document.getElementById('score-tag').textContent=`Score: ${ok} (−${penalty})`;
+}
+
+function setPrediction(band){
+  predictedBand=band;
+  document.getElementById('pred-overlay').classList.remove('show');
+  activityStarted=true;
+}
+
+// ── INIT ─────────────────────────────────────────
+function initActivity(){
+  Q=shuffle(QBANK);
+  scores=new Array(TOTAL).fill(null);
+  buildNav();buildScreens();buildBottomDots();goTo(0);startTimer();
+}
+
+// ── BUILD NAV ────────────────────────────────────
+function buildNav(){
+  const root=document.getElementById('nav-root');
+  root.innerHTML='';
+  Q.forEach((q,i)=>{
+    const labels={mc:'MC',fill:'Fill',predict:'Predict',bug:'Bug',match:'Match'};
+    const el=document.createElement('div');
+    el.className='nav-it';el.id='nav-'+i;el.onclick=()=>goTo(i);
+    el.innerHTML=`<div class="nav-n">${i+1}</div><div class="nav-txt">${q.title}</div><div class="nav-badge">${labels[q.type]||q.type}</div>`;
+    root.appendChild(el);
+  });
+}
+
+// ── BUILD BOTTOM DOTS ────────────────────────────
+function buildBottomDots(){
+  const container=document.getElementById('bb-dots');
+  container.innerHTML='';
+  Q.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='bb-dot';d.id='bbdot-'+i;
+    d.title=`Q${i+1}`;
+    d.onclick=()=>goTo(i);
+    container.appendChild(d);
+  });
+  updateBottomDot(0);
+}
+function updateBottomDot(active){
+  Q.forEach((_,i)=>{
+    const d=document.getElementById('bbdot-'+i);
+    if(!d)return;
+    d.className='bb-dot';
+    if(scores[i]===true)d.classList.add('done-ok');
+    else if(scores[i]===false)d.classList.add('done-fail');
+    if(i===active)d.classList.add('current');
+  });
+}
+
+// ── BUILD SCREENS ────────────────────────────────
+function buildScreens(){
+  const root=document.getElementById('screens-root');
+  root.innerHTML='';
+  Q.forEach((q,i)=>{
+    const div=document.createElement('div');
+    div.className='screen';div.id='screen-'+i;
+    div.innerHTML=buildQHTML(q,i);
+    root.appendChild(div);
+  });
+}
+
+function buildQHTML(q,i){
+  const tl={mc:'Multiple Choice',fill:'Fill in the Blank',predict:'Predict Output',bug:'Bug Hunt',match:'Drag Match'};
+  const tc={mc:'t-mc',fill:'t-fill',predict:'t-pred',bug:'t-bug',match:'t-match'};
+  const dl={easy:'Easy',med:'Medium',hard:'Hard',xhard:'Expert'};
+  const dc={easy:'diff-easy',med:'diff-med',hard:'diff-hard',xhard:'diff-xhard'};
+  let body='';
+  if(q.code)body+=`<div class="code">${q.code}</div>`;
+  body+=`<div class="q-text">${q.q}</div>`;
+  if(q.type==='mc'){
+    // Shuffle options per load
+    const optOrder=shuffle(q.opts.map((_,oi)=>oi));
+    const labels=['A','B','C','D'];
+    const wide=q.opts.some(o=>o.length>22);
+    body+=`<div class="opts${wide?' wide':''}" id="opts-${i}" data-opt-order="${optOrder.join(',')}">`;
+    optOrder.forEach((oi,li)=>{
+      if(q.opts[oi]===undefined)return;
+      body+=`<button class="opt" onclick="checkMC(${i},${oi})"><span class="opt-k">${labels[li]}</span>${q.opts[oi]}</button>`;
+    });
+    body+='</div>';
+  } else if(q.type==='fill'){
+    body+=`<input class="fill-inp" id="fill-${i}" placeholder="${q.ph||'Type your answer...'}" autocomplete="off" spellcheck="false">`;
+  } else if(q.type==='predict'){
+    q.inputs.forEach(inp=>{
+      body+=`<div class="out-line"><span class="out-sym">${inp.sym}</span><input class="out-inp" id="inp-${i}-${inp.id}" placeholder="${inp.ph||'...'}" autocomplete="off" spellcheck="false"></div>`;
+    });
+  } else if(q.type==='bug'){
+    body+=`<div class="bug-lines" id="buglines-${i}">`;
+    q.buglines.forEach(bl=>{
+      body+=`<div class="bug-line" id="bugline-${i}-${bl.ln}" onclick="pickBugLine(${i},${bl.ln})"><div class="bug-lnum">${bl.ln}</div><div class="bug-code">${bl.code}</div></div>`;
+    });
+    body+='</div>';
+  } else if(q.type==='match'){
+    body+=buildMatchHTML(q,i);
+  }
+  body+=`<div class="fb" id="fb-${i}"></div>`;
+  let btns=`<div class="btn-row">`;
+  if(q.type==='fill')btns+=`<button class="btn btn-pri" id="sub-${i}" onclick="checkFill(${i})">Submit</button>`;
+  else if(q.type==='predict')btns+=`<button class="btn btn-pri" id="sub-${i}" onclick="checkPredict(${i})">Submit</button>`;
+  else if(q.type==='match')btns+=`<button class="btn btn-pri" id="sub-${i}" onclick="checkMatch(${i})">Submit</button>`;
+  btns+=`<button class="btn btn-nxt" id="nxt-${i}" onclick="goTo(${i+1<TOTAL?i+1:i})">${i===TOTAL-1?'':'Next →'}</button></div>`;
+  body+=btns;
+  return `<div class="card"><div class="card-bar"><div class="dot d-r"></div><div class="dot d-y"></div><div class="dot d-g"></div><span class="c-file">question_${i+1}.cpp</span><span class="c-type ${tc[q.type]||'t-mc'}">${tl[q.type]||q.type}</span></div><div class="card-body"><div class="q-lbl">Q${i+1} of ${TOTAL} <span class="q-diff ${dc[q.diff]||'diff-med'}">${dl[q.diff]||q.diff}</span></div>${body}</div></div>`;
+}
+
+function buildMatchHTML(q,i){
+  const chipOrder=shuffle(q.chips.map((_,ci)=>ci));
+  let h=`<div class="match-grid">`;
+  h+=`<div><div class="match-col-lbl">Drag from here</div><div class="chip-pool" id="pool-${i}">`;
+  chipOrder.forEach(ci=>{
+    h+=`<div class="m-chip" id="chip-${i}-${ci}" draggable="true" ondragstart="dragStart(event,'chip-${i}-${ci}')" onclick="chipClick(${i},${ci})">${q.chips[ci]}</div>`;
+  });
+  h+=`</div></div>`;
+  const dropOrder=shuffle(q.dropDescs.map((_,di)=>di));
+  h+=`<div><div class="match-col-lbl">Drop here</div><div class="drop-rows" id="drops-${i}">`;
+  dropOrder.forEach(di=>{
+    h+=`<div class="drop-row"><div class="drop-desc">${q.dropDescs[di]}</div><div class="drop-slot" id="slot-${i}-${di}" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="dropChip(event,${i},${di})" onclick="slotClick(${i},${di})"><span class="slot-hint">drop here</span></div></div>`;
+  });
+  h+=`</div></div></div>`;
+  return h;
+}
+
+// ── NAVIGATION ───────────────────────────────────
+let currentQ=0;
+function goTo(i){
+  if(i<0||i>=TOTAL)return;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));
+  document.getElementById('screen-'+i)?.classList.add('active');
+  const nav=document.getElementById('nav-'+i);
+  if(nav){nav.classList.add('active');nav.scrollIntoView({block:'nearest'});}
+  document.getElementById('screen-result').classList.remove('active');
+  currentQ=i;
+  // update bottom bar
+  document.getElementById('bb-qnum').textContent=`Q${i+1} / ${TOTAL}`;
+  document.getElementById('bb-prev').disabled=(i===0);
+  document.getElementById('bb-next').disabled=(i===TOTAL-1);
+  updateBottomDot(i);
+}
+function bbPrev(){if(currentQ>0)goTo(currentQ-1);}
+function bbNext(){if(currentQ<TOTAL-1)goTo(currentQ+1);}
+
+// ── TRIPLE CONFIRM FLOW ──────────────────────────
+function triggerFinishFlow(){
+  if(finished)return;
+  const unanswered=scores.filter(s=>s===null).length;
+  const el=document.getElementById('confirm-unanswered-1');
+  el.textContent=unanswered>0?`⚠ ${unanswered} question${unanswered>1?'s':''} still unanswered — will be marked incorrect`:'';
+  document.getElementById('confirm-overlay-1').classList.add('show');
+}
+function confirmStep2(){
+  document.getElementById('confirm-overlay-1').classList.remove('show');
+  document.getElementById('confirm-overlay-2').classList.add('show');
+}
+function confirmStep3(){
+  document.getElementById('confirm-overlay-2').classList.remove('show');
+  document.getElementById('confirm-overlay-3').classList.add('show');
+}
+function closeConfirm(){
+  document.getElementById('confirm-overlay-1').classList.remove('show');
+  document.getElementById('confirm-overlay-2').classList.remove('show');
+  document.getElementById('confirm-overlay-3').classList.remove('show');
+}
+function finalSubmit(){
+  document.getElementById('confirm-overlay-3').classList.remove('show');
+  scores=scores.map(s=>s===null?false:s);
+  showResult();
+}
+
+// ── RESULT ───────────────────────────────────────
+function showResult(){
+
+  finished=true;clearInterval(timerIv);updateTimerUI();
+  document.querySelector('.bottom-bar').style.display = 'none';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));
+  document.getElementById('screen-result').classList.add('active');
+  document.getElementById('nav-result-wrap').style.display='block';
+  const ok=scores.filter(s=>s===true).length;
+  const fail=scores.filter(s=>s===false).length;
+  const pct=Math.round(ok/TOTAL*100);
+  document.getElementById('res-emoji').textContent=pct>=80?'🎉':pct>=60?'👍':'📝';
+  document.getElementById('r-ok').textContent=ok;
+  document.getElementById('r-fail').textContent=fail;
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-tabswitch').textContent=tabLeaveCount;
+  document.getElementById('r-penalty').textContent='−'+(tabLeaveCount*5)+' pts';
+  // Aristotle
+  if(predictedBand){
+    const card=document.getElementById('aristotle-card');
+    const predLow=parseInt(predictedBand.split('-')[0]);
+    const predHigh=parseInt(predictedBand.split('-')[1]);
+    const beat=ok>predHigh,matched=ok>=predLow&&ok<=predHigh;
+    const QUOTES={'0-24':{beat:"Even the humble seed, when it surpasses its own expectation, carries within it the promise of an oak.",match:"To know that you know nothing — this is the beginning of wisdom. You have found your starting point.",short:"To know that you know nothing — this is the beginning of wisdom. You have found your starting point."},'25-34':{beat:"Excellence is not a gift, but a skill that takes practice. Today, you practiced better than you believed.",match:"You aimed with honesty and struck true. A virtuous mind knows its current measure.",short:"The roots of education are bitter, but the fruit is sweet. Return to the roots."},'35-45':{beat:"We are what we repeatedly do. It seems you have been doing more than you have given yourself credit for.",match:"Knowing yourself is the beginning of all wisdom. You know yourself well — now push beyond.",short:"Patience is bitter, yet its fruit is sweet. The gap between ambition and result is merely unfinished practice."},'46-50':{beat:"Flawless. You knew exactly what you were capable of. This is eudaimonia.",match:"You have reached the highest form — where knowledge, effort, and expectation become one. This is eudaimonia.",short:"It is possible to fail in many ways, but to succeed is possible only in one way. You are close. Find that one way."}};
+    const outcome=beat?'beat':matched?'match':'short';
+    const quote=QUOTES[predictedBand][outcome];
+    const scoreColor=beat||matched?'var(--teal)':'var(--red)';
+    document.getElementById('aris-pred-val').textContent=predictedBand;
+    document.getElementById('aris-score-val').textContent=ok;
+    document.getElementById('aris-score-val').style.color=scoreColor;
+    document.getElementById('aris-quote').textContent='"'+quote+'"';
+    card.style.display='block';
+  }
+  if(currentUser){
+    document.getElementById('res-id-card').innerHTML=`<span style="color:var(--text3)">ID:</span> <span class="val">${currentUser.id}</span>&ensp;·&ensp;<span class="val">${currentUser.name}</span>`;
+  }
+  const now=new Date();
+  document.getElementById('res-ts').textContent='Submitted: '+now.toLocaleString('en-PH',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const rb=document.getElementById('review-block');
+  rb.innerHTML='';
+  Q.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='rev-item '+(scores[i]?'ok':'fail');
+    d.innerHTML=`<span>${scores[i]?'✓':'✗'}</span><span>Q${i+1}: ${q.title}</span>`;
+    rb.appendChild(d);
+  });
+  // Build answer key (hidden, needs password)
+  buildAnswerKey();
+}
+
+function buildAnswerKey(){
+  const body=document.getElementById('answer-key-body');
+  body.innerHTML=`<div class="ak-lbl">Answer Key — ${Q.length} Questions</div>`;
+  Q.forEach((q,i)=>{
+    const tl={mc:'MC',fill:'Fill',predict:'Predict',bug:'Bug',match:'Match'};
+    let ans='';
+    if(q.type==='mc')ans=q.opts[q.correct];
+    else if(q.type==='fill')ans=q.answers[0];
+    else if(q.type==='predict')ans=q.answers.join(' | ');
+    else if(q.type==='bug')ans='Line '+q.correctLine;
+    else if(q.type==='match')ans=q.answers.join(' → ');
+    const row=document.createElement('div');
+    row.className='ak-row';
+    row.innerHTML=`<span class="ak-num">Q${i+1}</span><span class="ak-title">${q.title} <span style="color:var(--text3);font-size:9px;">[${tl[q.type]}]</span></span><span class="ak-ans">${ans}</span>`;
+    body.appendChild(row);
+  });
+}
+function unlockAnswerKey(){
+  const pw=document.getElementById('ak-password').value;
+  if(pw==='admin1234567890'){
+    document.getElementById('answer-key-body').classList.add('show');
+    document.getElementById('ak-password').disabled=true;
+    document.querySelector('#answer-key-section button').disabled=true;
+    document.querySelector('#answer-key-section button').textContent='✓ Unlocked';
+  } else {
+    document.getElementById('ak-password').style.borderColor='var(--red)';
+    setTimeout(()=>document.getElementById('ak-password').style.borderColor='',1000);
+  }
+}
+
+// ── SCORING ──────────────────────────────────────
+function markScore(qi,correct){
+  scores[qi]=correct;
+  const nav=document.getElementById('nav-'+qi);
+  if(nav){nav.classList.remove('done-ok','done-fail');nav.classList.add(correct?'done-ok':'done-fail');}
+  const ans=scores.filter(s=>s!==null).length;
+  const ok=scores.filter(s=>s===true).length;
+  document.getElementById('prog-lbl').textContent=`${ans} / ${TOTAL}`;
+  document.getElementById('prog-fill').style.width=(ans/TOTAL*100)+'%';
+  updateScoreDisplay();
+  updateBottomDot(currentQ);
+}
+function showFb(qi,correct,msg){
+  const fb=document.getElementById('fb-'+qi);
+  fb.className='fb show '+(correct?'ok':'fail');
+  fb.textContent=msg;
+  // show Next button (but not for last Q — use Finish instead)
+  if(qi<TOTAL-1)document.getElementById('nxt-'+qi)?.classList.add('show');
+}
+
+// ── CHECKERS ─────────────────────────────────────
+function checkMC(qi,chosen){
+  if(scores[qi]!==null||finished)return;
+  const q=Q[qi];
+  const opts=document.querySelectorAll('#opts-'+qi+' .opt');
+  opts.forEach(o=>o.disabled=true);
+  const ok=chosen===q.correct;
+  // Only mark chosen wrong — never reveal correct answer
+  if(ok){
+    opts.forEach(o=>{if(parseInt(o.getAttribute('onclick').match(/\d+/g)[1])===chosen)o.classList.add('correct');});
+  } else {
+    opts.forEach(o=>{if(parseInt(o.getAttribute('onclick').match(/\d+/g)[1])===chosen)o.classList.add('chosen-wrong');});
+  }
+  showFb(qi,ok,ok?q.fb_ok:q.fb_fail);
+  markScore(qi,ok);
+}
+function checkFill(qi){
+  if(scores[qi]!==null||finished)return;
+  const q=Q[qi];
+  const inp=document.getElementById('fill-'+qi);
+  const val=inp.value.trim();
+  const ok=q.answers.some(a=>a.toLowerCase()===val.toLowerCase());
+  inp.disabled=true;inp.classList.add(ok?'ok':'fail');
+  const sub=document.getElementById('sub-'+qi);if(sub)sub.disabled=true;
+  showFb(qi,ok,ok?q.fb_ok:q.fb_fail+' (Accepted: '+q.answers[0]+')');
+  markScore(qi,ok);
+}
+function checkPredict(qi){
+  if(scores[qi]!==null||finished)return;
+  const q=Q[qi];
+  let all=true;
+  q.inputs.forEach((inp,ii)=>{
+    const el=document.getElementById('inp-'+qi+'-'+inp.id);
+    const val=el.value.trim();
+    const ok=q.answers[ii].trim().toLowerCase()===val.toLowerCase();
+    el.disabled=true;el.classList.add(ok?'ok':'fail');
+    if(!ok)all=false;
+  });
+  const sub=document.getElementById('sub-'+qi);if(sub)sub.disabled=true;
+  showFb(qi,all,all?q.fb_ok:q.fb_fail);
+  markScore(qi,all);
+}
+function pickBugLine(qi,ln){
+  if(scores[qi]!==null||finished)return;
+  const q=Q[qi];
+  document.querySelectorAll('#buglines-'+qi+' .bug-line').forEach(el=>{el.classList.remove('selected','correct-pick','chosen-wrong');el.onclick=null;});
+  const ok=ln===q.correctLine;
+  // No reveal: only show chosen as wrong
+  if(ok){
+    document.getElementById('bugline-'+qi+'-'+ln)?.classList.add('correct-pick');
+  } else {
+    document.getElementById('bugline-'+qi+'-'+ln)?.classList.add('chosen-wrong');
+  }
+  showFb(qi,ok,ok?q.fb_ok:q.fb_fail);
+  markScore(qi,ok);
+}
+
+// ── MATCH ────────────────────────────────────────
+function dragStart(e,chipId){currentDragChipId=chipId;e.dataTransfer.setData('text/plain',chipId);}
+function dropChip(e,qi,si){
+  e.preventDefault();
+  const slot=document.getElementById('slot-'+qi+'-'+si);
+  slot.classList.remove('over');
+  const cid=currentDragChipId||e.dataTransfer.getData('text/plain');
+  if(!cid)return;
+  const chip=document.getElementById(cid);
+  if(!chip||chip.classList.contains('gone'))return;
+  const ex=slot.dataset.chipId;
+  if(ex&&ex!==cid)document.getElementById(ex)?.classList.remove('gone');
+  slot.dataset.chipId=cid;
+  slot.innerHTML=`<span class="slot-txt">${chip.textContent}</span>`;
+  chip.classList.add('gone');
+  selectedChip=null;currentDragChipId=null;
+}
+function chipClick(qi,ci){
+  if(scores[qi]!==null)return;
+  const chip=document.getElementById('chip-'+qi+'-'+ci);
+  if(chip.classList.contains('gone'))return;
+  if(selectedChip===chip){chip.style.outline='';selectedChip=null;return;}
+  if(selectedChip)selectedChip.style.outline='';
+  selectedChip=chip;chip.style.outline='2px solid var(--amber)';
+}
+function slotClick(qi,si){
+  if(scores[qi]!==null||!selectedChip)return;
+  const slot=document.getElementById('slot-'+qi+'-'+si);
+  const ex=slot.dataset.chipId;
+  if(ex)document.getElementById(ex)?.classList.remove('gone');
+  slot.dataset.chipId=selectedChip.id;
+  slot.innerHTML=`<span class="slot-txt">${selectedChip.textContent}</span>`;
+  selectedChip.classList.add('gone');selectedChip.style.outline='';selectedChip=null;
+}
+function checkMatch(qi){
+  if(scores[qi]!==null||finished)return;
+  const q=Q[qi];
+  let all=true;
+  q.answers.forEach((ans,i)=>{
+    const slot=document.getElementById('slot-'+qi+'-'+i);
+    const chip=slot.dataset.chipId?document.getElementById(slot.dataset.chipId):null;
+    const placed=chip?chip.textContent.trim():'';
+    const ok=placed===ans;
+    slot.classList.add(ok?'ok':'fail');
+    if(chip)chip.classList.add(ok?'ok':'fail');
+    if(!ok)all=false;
+  });
+  const sub=document.getElementById('sub-'+qi);if(sub)sub.disabled=true;
+  showFb(qi,all,all?q.fb_ok:q.fb_fail);
+  markScore(qi,all);
+}
+
+// ── ENTER KEY ────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const active=document.querySelector('.screen.active');
+  if(!active)return;
+  const qi=parseInt(active.id.replace('screen-',''));
+  if(isNaN(qi)||!Q[qi]||scores[qi]!==null)return;
+  if(Q[qi].type==='fill')checkFill(qi);
+  if(Q[qi].type==='predict')checkPredict(qi);
+});
+</script>
+</body>
+</html>
